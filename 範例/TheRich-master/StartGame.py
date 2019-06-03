@@ -268,62 +268,68 @@ def blit_alpha(target,source,location,opacity):
 
 
 def main():
-    pygame.init()
-    clock = pygame.time.Clock()
+    pygame.init()#initialize all modules(import 所有東西)
+    clock = pygame.time.Clock()#create an object to help track time(?)
     
-    # 初始化屏幕
+    # 初始化螢幕
     size = (1270,768)
-    screen = pygame.display.set_mode(size)
-    pygame.display.set_caption("理工大大富翁 - made by 王璞劼")
+    screen = pygame.display.set_mode(size)#Initialize a window or screen for display, parameter 是大小
+    pygame.display.set_caption("PBC 2019 SPRING: 誰能先畢業?")#title
     
-    # 读取字体以及有关数据
-    textColorInMessageBox = (141,146,152)
+    # 設定字體與字顏色
+    textColorInMessageBox = (141,146,152)#這三個數字決定顏色，然後存入變數
     white = (255,255,255)
     black = (0,0,0)
     red = (255,0,0)
-    font = pygame.font.Font('resource\\font\\myfont.ttf',30)
+    font = pygame.font.Font('resource\\font\\myfont.ttf',30)#創建字體對象
     
     
-    # 读取资源
-    backgroud = pygame.image.load("resource\\pic\\GameMap.png")
+    # 從電腦讀取圖片 load new image from a file, works with png, jpg, GIF
+    backgroud = pygame.image.load("resource\\pic\\GameMap.png")#resource是個資料夾，他跟遊戲py檔在同一個資料夾裡
     chess = pygame.image.load("resource\\pic\\chess.png")
     chess_com =  pygame.image.load("resource\\pic\\chess1.png")
-    bigdice_image = pygame.image.load("resource\\pic\\dice.png").convert_alpha()
+    bigdice_image = pygame.image.load("resource\\pic\\dice.png").convert_alpha()#use the convert_alpha() method after loading so that the image has per pixel transparency.
     dice_1 = pygame.image.load("resource\\pic\\dice_1.png")
     dice_2 = pygame.image.load("resource\\pic\\dice_2.png")
     dice_3 = pygame.image.load("resource\\pic\\dice_3.png")
     dice_4 = pygame.image.load("resource\\pic\\dice_4.png")
     dice_5 = pygame.image.load("resource\\pic\\dice_5.png")
     dice_6 = pygame.image.load("resource\\pic\\dice_6.png")
-    dices = [dice_1,dice_2,dice_3,dice_4,dice_5,dice_6]
-    yes = pygame.image.load("resource\\pic\\yes.png")
+    dices = [dice_1,dice_2,dice_3,dice_4,dice_5,dice_6]#骰子投完後，會將結果輸出到介面，讓玩家看
+    yes = pygame.image.load("resource\\pic\\yes.png")#"Yes" button
     yes2 = pygame.image.load("resource\\pic\\yes2.png")
     no = pygame.image.load("resource\\pic\\no.png")
     no2 = pygame.image.load("resource\\pic\\no2.png")
-    GameStart = pygame.image.load("resource\\pic\\GameStart.png")
+	
+    GameStart = pygame.image.load("resource\\pic\\GameStart.png")#開始頁面
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
     turnover = pygame.image.load("resource\\pic\\turnover.png")
     turnover2 = pygame.image.load("resource\\pic\\turnover2.png")
+   
+    #以下是他們遊戲裡的四個神明，我們用不到
     shuaishen = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
     tudishen = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
     caishen = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
     pohuaishen = pygame.image.load("resource\\pic\\pohuaishen.png").convert_alpha()
     
-    rollDiceSound = pygame.mixer.Sound("resource\\sound\\rolldicesound.wav")
+    #上音效
+    rollDiceSound = pygame.mixer.Sound("resource\\sound\\rolldicesound.wav")#我們可以考慮加一點點音效(娛樂效果)，如校歌
     bgm = pygame.mixer.music.load("resource\\sound\\bgm.ogg")
     throwcoin = pygame.mixer.Sound("resource\\sound\\throwcoin.wav")
     moneysound = pygame.mixer.Sound("resource\\sound\\moneysound.wav")
     aiyo = pygame.mixer.Sound("resource\\sound\\aiyo.wav")
     didong = pygame.mixer.Sound("resource\\sound\\didong.wav")
     
-    # PlayList 在对象中设置应该播放的声音
+    # PlayList 在對象中，設置應撥放的聲音
     playList = [moneysound ,throwcoin ,aiyo]
     
-    # 各种Surface的rect 
-    bigdice_rect = bigdice_image.get_rect()
-    bigdice_rect.left , bigdice_rect.top = 50 , 600
+    # 在畫布上，畫出該出現的各種東西，然後設定它們的位置 
+    bigdice_rect = bigdice_image.get_rect()#在畫布上畫出來這個圖，且規定他是矩形的
+    bigdice_rect.left , bigdice_rect.top = 50 , 600#設定它的位置
+
     yes_rect = yes.get_rect()
     yes_rect.left , yes_rect.top = 500,438 
+    
     no_rect = no.get_rect()
     no_rect.left , no_rect.top =  630,438
     button_rect = StartGameButton.get_rect()
@@ -331,11 +337,11 @@ def main():
     turnover_rect = turnover.get_rect()
     turnover_rect.left , turnover_rect.top = 1035,613
     
-    # 实例化对象
-    players = []
-    computers = []
+    # 初始化玩家，他們的遊戲只有單機版，自己打電腦而已
+    players = []#放所有玩家
+    computers = []#他們有AI
     allplayers = []
-    player_1 = Player(chess , '玩家' , True )
+    player_1 = Player(chess , '玩家' , True )#產生一個玩家物件
     player_com1 = Player(chess_com , '电脑' , False )
     players.append(player_1)
     computers.append(player_com1)
@@ -344,8 +350,8 @@ def main():
     
     presentPlayer = player_com1
     
-    # 初始化建筑物数据
-    gate = Building('大门',1000,200,[1,2])
+    # 初始化建築(我們是用Castle Class)
+    gate = Building('大门',1000,200,[1,2])#self,name,price,payment,location(?)
     fountain = Building('喷泉',2000,400,[3,4])
     path = Building('小道',800,160,[5])
     library = Building('图书馆',2000,400,[6,7])
@@ -362,25 +368,26 @@ def main():
     
     
     
-    # 坐标数据 同时处理坐标数据 使之合适
+    # 裝好所有座標的list，共有16個座標
     MapXYvalue = [(435.5,231.5),(509.5,231.5),(588.5,231.5),(675.5,231.5),(758.5,231.5),\
                   (758.5,317.0),(758.5,405.5),(758.5,484.5),(758.5,558.5),(679.5,558.5),\
                   (601.5,558.5),(518.5,556.5),(435.5,556.5),(435.5,479.5),(435.5,399.0),\
                   (435.5,315.5)
                   ]
     
-    MapChessPosition_Player = []
+    MapChessPosition_Player = []#紀錄玩家位置?
     MapChessPosition_Com = []
-    MapChessPosition_Original = []
-    MapChessPosition_Payment = []
+    MapChessPosition_Original = []#紀錄甚麼位置??
+    MapChessPosition_Payment = []#紀錄甚麼位置???
     
+    #設定介面各個東西的位置
     MapMessageBoxPosition = (474.1 , 276.9)
-    YesNoMessageBoxPosition = [(500,438) , (630,438)]
+    YesNoMessageBoxPosition = [(500,438) , (630,438)]#為甚麼是list
     StartGameButtonPosition = (1003,30)
     TurnOvwrButtonPosition = (1035,613)
     
     
-                # 调整位置
+    # 調整位置(?!!為何，這一步在幹麻?還是只是看著錶調整)
     for i in range(0,16):
         MapChessPosition_Original.append((MapXYvalue[i][0]-50,MapXYvalue[i][1]-80))
         MapChessPosition_Player.append((MapXYvalue[i][0]-70,MapXYvalue[i][1]-60))
@@ -391,11 +398,11 @@ def main():
     
         
     
-    # 循环时所用的一些变量      
-    running = True
-    image_alpha = 255
-    button_alpha = 255
-    half_alpha = 30
+    # 循環要用的變數      
+    running = True#是否循環，遊戲結束才變成False，跳出。
+    image_alpha = 255#(?what is alpha)
+    button_alpha = 255#(?)
+    half_alpha = 30#(?)
     showdice = True
     showYes2 = False
     showNo2 = False
@@ -405,38 +412,38 @@ def main():
     gameStarted = False
     showButton2 = False
     
-    # 播放背景音乐
+    # 播放背景音樂(我們不要)
     pygame.mixer.music.play(100)
     
 ########################################进入游戏循环！###############################################    
 
 
-    # 循环开始！ 
-    while running:
-        if not gameStarted:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+    # 循環開始！ 
+    while running:#running預設是True
+        if not gameStarted:#gameStarted預設False
+            for event in pygame.event.get():#在循環中，會不斷蒐集發生事件的發生
+                if event.type == pygame.QUIT:#QUIT是指把視窗關掉!
                     sys.exit()
                 
-                # 明暗触发 鼠标位置判断 
-                if event.type == pygame.MOUSEMOTION:
-                    if button_rect.collidepoint(event.pos):
-                        button_alpha = 255   
+                # 滑鼠點到，明暗改變
+                if event.type == pygame.MOUSEMOTION:#MOUSEMOTION好像會紀錄滑鼠的動作
+                    if button_rect.collidepoint(event.pos):#collidepoint會去確認()裡的點，是否在一個矩形裡，return True。Pos會回傳位置
+                        button_alpha = 255#如果點到button，顏色改變   
                     else:
-                        button_alpha = 120 
-                        
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                        button_alpha = 120#沒有點到，改變 
+                # 滑鼠點到，        
+                if event.type == pygame.MOUSEBUTTONDOWN:#MOUSEBUTTONDOWN按下去的意思
                      
-                    if button_rect.collidepoint(event.pos): # 按下按钮
-                        didong.play()                     
-                        gameStarted = True  
+                    if button_rect.collidepoint(event.pos): # 按的點在框框內
+                        didong.play()#撥放音樂                    
+                        gameStarted = True#遊戲正式開始  
             
-            screen.blit(GameStart , (0,0))       
+            screen.blit(GameStart , (0,0))#blit: draw one image onto another，換成GameStart，(0,0)應該是位置
             blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
         
         
         
-        if gameStarted:
+        if gameStarted:#剛剛按了，一該是對的
         
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
