@@ -64,7 +64,7 @@ class Player():
         self.dice_value = 0
         self.locatedBuilding = 0
         self.showText = []
-        self.isPlayer = isPlayer
+        self.isPlayer = isPlayer#自己??
         self.ownedBuildings = []
         self.isShowText = False
         self.soundPlayList = 0
@@ -73,11 +73,11 @@ class Player():
         self.tudishen = 0
         self.pohuaishen = 0
         
-    
-    def judgePosition(self,buildings): # 位置判断 返回值是所在位置的建筑
-        for each in buildings:
-            for every in each.location:
-                if self.position == every:
+    #位置判断 返回值是所在位置的建筑
+    def judgePosition(self,buildings): #buildings is a list of the Building Objects we created
+        for each in buildings:#"each" is a object of class building
+            for every in each.location:#get the location of the building
+                if self.position == every:#find where we are located right now
                     return each
                     
             
@@ -94,7 +94,7 @@ class Player():
             '''
             
     def buyaBuilding(self,isPressYes):    # 购买方法
-        if isPressYes and self.locatedBuilding.owner != self.name:
+        if isPressYes and self.locatedBuilding.owner != self.name:#有按yes，然後不適自己的
             self.locatedBuilding.owner = self.name
             self.locatedBuilding.wasBought = True
             self.ownedBuildings.append(self.locatedBuilding)
@@ -136,7 +136,7 @@ class Player():
     def eventInPosition(self,allplayers):        # 判断在建筑位置应该发生的事件        
         building = self.locatedBuilding
         if building.name != '空地':
-            if self.locatedBuilding.wasBought == False: # 未购买的时候显示建筑的数据！
+            if self.locatedBuilding.wasBought == False: # 未购买的时候显示建筑的数据！(無主地)
                 if self.isPlayer == True:
                     textLine0 = self.name +'扔出了' + '%d'% self.dice_value + '点！'
                     textLine1 = self.name +'来到了' + building.name + '!'
@@ -192,7 +192,9 @@ class Player():
                                     textLine1 = '摧毁了对手的房子！'
                                     building.owner = 'no'
                                     building.wasBought = False
-                                    self.showText = [textLine0,textLine1]
+                                    self.
+				
+				showText = [textLine0,textLine1]
                                     self.pohuaishen = 0   
                                 else:
                                     textLine0 = self.name + '扔出了' + '%d'% self.dice_value + '点！'
@@ -211,7 +213,7 @@ class Player():
                                     self.soundPlayList = 3
                                     # ----- 动画-------
                         
-        else:
+        else:#是空地(沒有建築)
             # 发现不能处理在空地上的情况 于是使用 try & except 来解决！然后加入了幸运事件功能！
             # 后来发现 try except 弊端太大 找不到错误的根源 换为if else嵌套。。
             whichone = self.dice_value % 4
@@ -361,7 +363,7 @@ def main():
     resOne = Building('三餐厅',800,160,[13])
     resTwo = Building('二餐厅',800,160,[14])
     resThree = Building('一餐厅',800,160,[15])
-    kongdi2 = Building('空地',0,0,[0])
+    kongdi2 = Building('空地',0,0,[0])#有點笨，不應該讓兩個地方名字一樣!
     
     buildings = [gate,fountain,path,library,classroomNine,\
                  classroomTen,resOne,resThree,resTwo,kongdi1,kongdi2]
@@ -409,7 +411,7 @@ def main():
     showYes_No = False
     pressYes = False
     whetherYes_NoJudge = False
-    gameStarted = False
+    gameStarted = False#首頁按鍵
     showButton2 = False
     
     # 播放背景音樂(我們不要)
@@ -443,13 +445,13 @@ def main():
         
         
         
-        if gameStarted:#剛剛按了，一該是對的
+        if gameStarted:#剛剛按了後，變成True
         
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 
-                # 明暗触发 鼠标位置判断
+                # 滑鼠在它上面，有明暗變化
                 if event.type == pygame.MOUSEMOTION:
                     if bigdice_rect.collidepoint(event.pos):
                         image_alpha = 255   
@@ -457,48 +459,48 @@ def main():
                         image_alpha = 190
                         
                 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    
-                    if bigdice_rect.collidepoint(event.pos): # 按骰子
-                        if presentPlayer != player_1:
+                if event.type == pygame.MOUSEBUTTONDOWN:#滑鼠有點下去
+                    #muliple player這裡要重新設計!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if bigdice_rect.collidepoint(event.pos): # 按骰子按鍵
+                        if presentPlayer != player_1:#預設presentPlayer == player_com，所以這個一開始一定跑!之後presentPlayer都是輪的玩家。
                             rollDiceSound.play(1, 2000)
-                            pygame.time.delay(2000)
-                            showYes_No = player_1.move(buildings,allplayers)
-                            whetherYes_NoJudge = showYes_No
-                            presentPlayer = player_1
+                            pygame.time.delay(2000)#故意停一下，假裝骰子在動
+                            showYes_No = player_1.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
+                            whetherYes_NoJudge = showYes_No#whetherYes_NoJudge預設是False，return可能會是True也能是False，要看情況
+                            presentPlayer = player_1#換人，換成player1
                         else:
                             presentPlayer.showText = ['还没到你的回合！']
                         
                     if turnover_rect.collidepoint(event.pos): # 按回合结束
-                        showButton2 = True
-                        if presentPlayer != player_com1:
-                            showYes_No = player_com1.move(buildings,allplayers)
+                        showButton2 = True#YesNo按鍵True則會出現!
+                        if presentPlayer != player_com1:#同裡，presentPlayer是前一輪的玩家
+                            showYes_No = player_com1.move(buildings,allplayers)#骰子==> 移動 ==> 效果
                             presentPlayer = player_com1
                         else:
                             presentPlayer.showText = ['还没到你的回合！']                            
-                    else:
+                    else:#什麼都沒按
                         showButton2 = False
                     
                         # 不显示Yes_No的时候不能点击它们！
                     if whetherYes_NoJudge == True: 
-                        if yes_rect.collidepoint(event.pos): # 按是否
+                        if yes_rect.collidepoint(event.pos): # 按Yes
                             showYes2 = True
                             
-                        if no_rect.collidepoint(event.pos): # 按是否
+                        if no_rect.collidepoint(event.pos): # 按No
                             showNo2  = True
                       
-                if event.type == pygame.MOUSEBUTTONUP:
+                if event.type == pygame.MOUSEBUTTONUP:#Up vs down?!
                     
                     if turnover_rect.collidepoint(event.pos): # 按回合结束
                         showButton2 = False
                     
                     if yes_rect.collidepoint(event.pos): # 按是否
-                        showYes2 = False
+                        showYes2 = False#1 or 2 只是表示按鍵突出還是往下
                         showYes_No = False
                         # 只有在可以判定的时候才能算按下了是 同时将判断条件置为空
                         if whetherYes_NoJudge == True:
-                            pressYes = True
-                            whetherYes_NoJudge = False
+                            pressYes = True#才算是
+                            whetherYes_NoJudge = False#重新
                             
                             
                     if no_rect.collidepoint(event.pos): # 按是否
@@ -507,13 +509,13 @@ def main():
                         showYes_No = False              
                         whetherYes_NoJudge = False        
             
-                # 测试事件选项        
+                # 外掛:        
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_w:
+                    if event.key == pygame.K_w:#按w，玩家一值動
                         showYes_No = player_1.move(buildings,allplayers)
                         whetherYes_NoJudge = showYes_No
                         presentPlayer = player_1
-                    if event.key == pygame.K_q:
+                    if event.key == pygame.K_q:#按q電腦一值動
                         showYes_No = player_com1.move(buildings,allplayers)
                         presentPlayer = player_com1
             
@@ -603,7 +605,7 @@ def main():
                             screen.blit(text,MapChessPosition_Payment[i])                
             
                     
-            # 打印金钱数和幸运状态
+            # 打印金钱数和幸运状态  明展!!!!這裡要改成狀態!!
             
             money_1 = font.render(player_1.name +'金钱：%d' % player_1.money, True, black, white)
             screen.blit(money_1,(0,0))
@@ -701,7 +703,7 @@ def main():
                 
             
             
-            # 输赢判断
+            # 输赢判断: 要重寫
             for each in allplayers:
                 if each.money <= 0:
                     font = pygame.font.Font('resource\\font\\myfont.ttf',200)
