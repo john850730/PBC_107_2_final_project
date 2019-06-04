@@ -9,13 +9,16 @@ import random
 import sys
 
 # 腳色技能dict
-characters_dict = {'工學院': {'土木': {'credit': 140, 'attack': 4, 'ActiveAbility': None, 'PassiveAbility': '收回扣'}, '機械': {'credit': 140, 'attack': 4, 'ActiveAbility': '工具人', 'PassiveAbility': None}}, \
-    '管理學院': {'國企': {'credit': 129, 'attack': 4, 'ActiveAbility': 'elite光環', 'PassiveAbility': None}, '會計': {'credit': 133, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '四萬保底3萬8'}}, \
-        '社科院': {'經濟': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '一隻看不見的手'}}, \
-            '醫學院': {'醫學': {'credit': 229, 'attack': 5, 'ActiveAbility': '妙手回春', 'PassiveAbility': None}}, \
-                '文學院': {'哲學': {'credit': 128, 'attack': 3, 'ActiveAbility': '你轉系了嗎', 'PassiveAbility': '我唯一知道的，就是我什麼都不知道'}, '中文': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '讀書人的事...怎麼能算偷呢'}}, \
-                    '生命科學院': {'生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ'}}, \
-                        '法律學院':{'法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉'}}}
+characters_dict = {'工學院': {'土木': {'credit': 140, 'attack': 4, 'ActiveAbility': None, 'PassiveAbility': '收回扣', 'definition': '買完土地、或建蓋城堡後，可以回收10%消耗的錢幣'}, \
+    '機械': {'credit': 140, 'attack': 4, 'ActiveAbility': '工具人', 'PassiveAbility': None, 'definition': '蓋城堡時可直接升級城堡血量10點'}}, \
+    '管理學院': {'國企': {'credit': 129, 'attack': 4, 'ActiveAbility': 'elite光環', 'PassiveAbility': None, 'definition': '遊戲介面上的角色發出光芒一下下'}, \
+        '會計': {'credit': 133, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '四萬保底3萬8', 'definition': '每回合自動獲得2錢幣'}}, \
+        '社科院': {'經濟': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '一隻看不見的手', 'definition': '土地被其他玩家踩到時，可偷取對方10%的錢幣'}}, \
+            '醫學院': {'醫學': {'credit': 229, 'attack': 5, 'ActiveAbility': '妙手回春', 'PassiveAbility': None, 'definition': '在該角色回合開始時，可選擇是否使用妙手回春，選擇任一擁有的一棟建築，回覆該建築物至滿血狀態(每場遊戲只能使用一次)'}}, \
+                '文學院': {'哲學': {'credit': 128, 'attack': 3, 'ActiveAbility': '你轉系了嗎', 'PassiveAbility': '我唯一知道的，就是我什麼都不知道', 'definition': '擲骰子的點數翻倍'}, \
+                    '中文': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '讀書人的事...怎麼能算偷呢', 'definition': '對方玩家經過我土地(含城堡)時，除了收取過路費外，還可以偷取對方1錢幣'}}, \
+                    '生命科學院': {'生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ', 'definition': '對方玩家攻擊該玩家的土地或城堡，每次只會受到2點傷害'}}, \
+                        '法律學院':{'法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉', 'definition': '法律系所持有城堡被打下時，扣除打下者10%的錢幣'}}}
 
 class Player():
     def __init__(self, image, name):
@@ -110,9 +113,6 @@ class Player():
     def move(self, buildings, allplayers):   # 移動方法 返回值是所在的土地位置
         if self.name == '哲學': # 哲學系技能
             self.dice_value =  random.randint(1,6) * 2
-            textline0 = '此角色被動技能為【%s】' % self.PassiveAbility
-            textline1 = '擲骰子點數翻倍!'
-            self.showText = [textline0, textline1]
         else:
             self.dice_value =  random.randint(1,6)
         self.position += self.dice_value
@@ -296,7 +296,6 @@ lands = [] # 地圖土地資訊
 
 '''
 醫學系技能
-機械系技能
 哲學系技能列印文字
 生科系技能列印文字
 角色主動技能
