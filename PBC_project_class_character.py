@@ -38,7 +38,6 @@ class Player():
         self.showText = []                
         self.ownedLands = []                # 總共持有的土地
         self.isShowText = False
-        self.soundPlayList = 0
         # 每回合一些變數要重新用回初始值，因過程可能改變，像是movable，creditable
     
 
@@ -61,7 +60,6 @@ class Player():
                 textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
                 textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1'
                 self.showText = [textline0, textline1, textline2, textline3]
-                self.soundPlayList = 1
                 return True
             else:
                 self.locatedLand.owner = self.name
@@ -69,7 +67,6 @@ class Player():
                 self.ownedLands.append(self.locatedLand)
                 self.money -= self.locatedLand.price
                 self.showText = [self.name + '購買了' + self.locatedLand.name + '!']
-                self.soundPlayList = 1
                 return True
         else:
             return False
@@ -86,13 +83,16 @@ class Player():
                     textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
                     textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1'
                     self.showText = [textline0, textline1, textline2, textline3]
-                    self.soundPlayList = 1
                     return True
 
                 elif self.name == '機械': # 機械系技能
-                    '''
-                    技能程式碼
-                    '''
+                    textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
+                        '它的過路費是%d' % self.locatedLand.payment
+                    textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
+                    textline2 = '建蓋城堡後，城堡升級，血量+10!'
+                    self.locatedLand.HP += 10
+                    self.showText = [textline0, textline1, textline2]
+                    return True
                 
                 else:
                     self.money -= self.locatedLand.payment
@@ -113,7 +113,6 @@ class Player():
             textline0 = '此角色被動技能為【%s】' % self.PassiveAbility
             textline1 = '擲骰子點數翻倍!'
             self.showText = [textline0, textline1]
-            self.soundPlayList = 1
         else:
             self.dice_value =  random.randint(1,6)
         self.position += self.dice_value
@@ -127,16 +126,15 @@ class Player():
     
     def isAttacking(self, land, isPressYes):  # 是否要攻打城堡
         if isPressYes:
-            if (land.HP > self.attack) and (land.owner == '生科'): # 生科系技能
+            if (land.HP > 2) and (land.owner == '生科'): # 生科系技能
                 land.HP -= 2
                 self.money -= land.payment
                 land.owner.money += land.payment
                 textline0 = '此角色被動技能為【%s】' % self.PassiveAbility
                 textline1 = '別人攻擊該玩家的土地或建築，每次只會受到2點傷害!'
                 self.showText = [textline0, textline1]
-                self.soundPlayList = 1
 
-            if land.HP > self.attack:
+            elif land.HP > self.attack:
                 land.HP -= self.attack
                 self.money -= land.payment
                 land.owner.money += land.payment
@@ -168,7 +166,9 @@ class Player():
 
             elif land.owner == self.name: # 路過自己的土地 蓋城堡
                 if land.islocatedCastle == True:
-                    pass # 走到自己蓋的城堡pass
+                    '''
+                    textline
+                    '''
                 else:
                     textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
                     textLine1 = '來到了自己的'+ self.locatedLand.name + '!'
@@ -185,26 +185,26 @@ class Player():
                     textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
                     textLine2 = '是否要攻打' + component + '的城堡?' 
                     textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    textLine4 = '經濟系玩家被動技能為【一隻看不見的手】'
+                    textLine4 = '經濟系玩家被動技能為【%s】' % land.owner.PassiveAbility
                     textLine5 = '土地被踩到時，可偷取對方10%的錢幣'
                     textLine6 = '您已被經濟系玩家偷取%d的錢幣' % self.money * 0.1
                     component.money += self.money * 0.1
                     self.money -= self.money * 0.1
                     self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
-                    return 0 # main函數根據0來執行是否攻打城堡
+                    return True
 
                 elif component == '中文':
                     textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
                     textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
                     textLine2 = '是否要攻打' + component + '的城堡?' 
                     textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    textLine4 = '中文系玩家被動技能為【讀書人的事...怎麼能算偷呢?】'
+                    textLine4 = '中文系玩家被動技能為【%s】' % land.owner.PassiveAbility
                     textLine5 = '經過中文系玩家土地(含城堡)時，除了被收取過路費外，還會被偷取1錢幣'
                     textLine6 = '您已被中文系玩家偷取1錢幣'
                     component.money += 1
                     self.money -= 1
                     self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
-                    return 0 # main函數根據0來執行是否攻打城堡
+                    return True
 
                 else:
                     textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
@@ -238,12 +238,12 @@ class Player():
                 self.movable = False
 
             if whichone == 3:
-                textLine2 = '機會命運: 報強者粗大腿'
+                textLine2 = '機會命運: 抱強者粗大腿'
                 textLine3 = '獲得學分最高玩家學分數的20%'
-                '''
-                main function 每回合要可以找出學分最高玩家
-                '''
-                self.credit += '學分最高玩家'.credit * 0.2
+                credits_list = []
+                for player in allplayers:
+                    credits_list.append(player.credit)
+                self.credit += credits_list.max() * 0.2
 
             if whichone == 4:
                 textLine2 = '機會命運: 舟山路大淹水'
@@ -288,6 +288,8 @@ class Land():
         self.HP = HP                         # 土地血量(會變動)
         self.temp_HP = HP                    # 土地血量(不會變動)，用來重置血量當城堡被打掉時
 
+
+
 '''
 lands = [] # 地圖土地資訊
 '''
@@ -304,5 +306,6 @@ lands = [] # 地圖土地資訊
 main function
 先判斷當前player是否有主動技能，然後詢問是否要使用
 然後要判斷player是否可移動movable = True
-每回合要刷新
+每回合要刷新 movable刷新成True要放在會讓玩家下回合不能動的事件指令前但在判斷玩家本回合可不可以動然後擲骰子的指令後
 '''
+
