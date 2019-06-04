@@ -6,70 +6,60 @@ class fourtune_card():
 		
 		self.cards_value = random.randit(1,7)
        
-    def cards_effect(self,position,attack,stars,scores,other_palyers,medic,all_players):
+    def cards_effect(self,position,movavle,credit,money,creditble):
 
         if self.cards_value == 1:
 
-        	textline1 = self.name + "被當"
-
-        	self.scores += 0
-
-        	self.shohText = [textline1]
+        	self.creditble = False
 
         if self.cards_value == 2 :
-        
 
-            textline2 = self.name + "出國"
+            if self.money >= 5 :
 
-            self.stars -= 5
+                self.money -= 5
 
-            self.attack += 1
+                self.attack += 1
 
-            self.showText = [textline2]
+            else:
+
+                pass
 
         if cards_value == 3:
 
-            textline3 = self.name + "吊水源"
-
-            self.position += 0
-
-            self.showText = [textline3]
+            self.movavle = False
 
         if cards_value == 4:
-        
-            textline4 = self.name + "抱大腿"
 
-            self.stars += 0.2 * max.all_players.stars
+            total_credit = []
+            
+            for i in range(0,5):
 
-            self.showText = [textline4]
+                total_credit.append(all_players.credit)
+
+            self.crdit += 0.2 * max.total_credit
+
 
         if cards_value == 5:
-        
-            textline5 = self.name + "舟山路淹水"
 
-            for i in range(0,2):
+            if self.name != "醫學":
+            
+                self.movable = False
 
-            	other_palyers.position += 0
 
-            	self.showText = [textline5]
 
         if  cards_value == 6:
 
-            textline6 = self.name + "凱道誓師大會"
+            if self.name == "醫學":
 
-            medic.position += 0
-
-            self.showText = [textline6]
+                self.movable = False
 
         if cards_value == 7:
             
-            textline7 = self.name + "暑修危機分"
+            if self.money >= 5:
 
-            self.stars -= 5
+                self.money -= 5
 
-            self.scores += 3
-
-            self.showText = [textline7]
+                self.crdit += 3
 
         return True    
 
