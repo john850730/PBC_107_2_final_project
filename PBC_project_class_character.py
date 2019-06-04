@@ -58,7 +58,7 @@ class Player():
                 textline0 = self.name + '購買了' + self.locatedLand.name + '!'
                 textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                 textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
-                textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1'
+                textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1
                 self.showText = [textline0, textline1, textline2, textline3]
                 return True
             else:
@@ -81,7 +81,7 @@ class Player():
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
-                    textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1'
+                    textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1
                     self.showText = [textline0, textline1, textline2, textline3]
                     return True
 
