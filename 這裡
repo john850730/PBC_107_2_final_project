@@ -1,0 +1,68 @@
+if gameStarted:#按了
+    
+    #處理按叉叉的事件
+    for event in pygame.event.get():
+        if event.type == pygame.Quit():
+            sys.exit()
+    
+    #四個玩家要輪流玩，要判斷是換誰    
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if bigdice_rect.collidepoint(event.pos):
+            presentPlayer = allplayers[playerCount]
+            if presentPlayer.movable:
+                pygame.time.delay(2000)#故意停一下，假裝骰子在動
+                showYes_No = presentPlayer.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
+                whetherYes_NoJudge = showYes_No
+                
+                    
+            else:
+                 continue#回去看
+        #按回合結束鍵     
+        if turnover_rect.collidepoint(event.pos): 
+            showButton2 = True#YesNo按鍵True則會出現!
+            playerCount += 1
+            if playerCount == 4:
+                playerCount -= 4  
+                          
+        else:#什麼都沒按
+            showButton2 = False#YesNo按鍵不會出現   
+    
+    if whetherYes_NoJudge == True:#是否有效 
+        if yes_rect.collidepoint(event.pos): # 按Yes
+            showYes2 = True
+                            
+        if no_rect.collidepoint(event.pos): # 按No
+            showNo2  = True
+  
+    if event.type == pygame.MOUSEBUTTONUP:#Up vs down?!
+                    
+        if turnover_rect.collidepoint(event.pos): # 按回合结束
+            showButton2 = False
+                    
+        if yes_rect.collidepoint(event.pos): # 按是否
+            showYes2 = False#1 or 2 只是表示按鍵突出還是往下
+            showYes_No = False
+                        
+        if whetherYes_NoJudge == True:
+            pressYes = True#才算是
+            whetherYes_NoJudge = False#重新
+              
+        if no_rect.collidepoint(event.pos): # 按是否
+            showNo2 = False
+            pressYes = False
+            showYes_No = False              
+            whetherYes_NoJudge = False               
+         
+    #測試用: 按w的話，presentPlayer可以無限移動 (且輪不到其他人)       
+    if event.type == pygame.KEYDOWN:
+        if event.key == pygame.K_w:#按w，玩家一值動
+            showYes_No = presentPlayer.move(buildings,allplayers)
+            whetherYes_NoJudge = showYes_No
+            
+    if presentPlayer.buyaBuilding(pressYes) == True:
+                pressYes = False
+                
+            if presentPlayer.addaHouse(pressYes) == True:
+                pressYes = False
+        
+        
