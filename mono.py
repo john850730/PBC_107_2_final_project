@@ -14,8 +14,8 @@ characters_dict = {'土木': {'credit': 140, 'attack': 4, 'ActiveAbility': None,
         '經濟': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '一隻看不見的手'}, \
             '醫學': {'credit': 229, 'attack': 5, 'ActiveAbility': '妙手回春', 'PassiveAbility': None}, \
                 '哲學': {'credit': 128, 'attack': 3, 'ActiveAbility': '你轉系了嗎', 'PassiveAbility': '我唯一知道的，就是我什麼都不知道'}, '中文': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '讀書人的事...怎麼能算偷呢'}, \
-                    '生命科學院': {'生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ'}, \
-                        '法律學院':{'法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉'}}
+                    '生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ'}, \
+                        '法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉'}}
 
 class Player():
     def __init__(self, image, name, graduationCredit, attack, ActiveAbility, PassiveAbility, definition):
@@ -155,67 +155,7 @@ class Player():
 
     def eventInPosition(self, allplayers):        # 判斷在土地位置應該發生事件        
         land = self.locatedLand
-        if land.name != '機會命運':
-            if land.wasBought == False: # 土地未被買時 顯示土地資訊(價格、過路費等等)
-                textLine0 = self.name +'骰出了' + '%d' % self.dice_value + '點！'
-                textLine1 = self.name +'來到了' + land.name + '!'
-                textLine2 = '購買價格：%d' % land.price
-                textLine3 = '過路收費：%d' % land.payment
-                textLine4 = '是否購買?'
-                self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
-                return True
-
-            elif land.owner == self.name: # 路過自己的土地 蓋城堡
-                if land.islocatedCastle == True:
-                    '''
-                    textline
-                    '''
-                else:
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了自己的'+ self.locatedLand.name + '!'
-                    textLine2 = '可以蓋城堡！' 
-                    textLine3 = '加蓋收費：%d' % land.payment
-                    textLine4 = '是否加蓋?'
-                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
-                    return True
-
-            else:
-                component = land.owner # 走到非自己土地上的敵方名字(科系)
-                if component == '經濟': # 經濟系技能
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
-                    textLine2 = '是否要攻打' + component + '的城堡?' 
-                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    textLine4 = '經濟系玩家被動技能為【%s】' % land.owner.PassiveAbility
-                    textLine5 = '土地被踩到時，可偷取對方10%的錢幣'
-                    textLine6 = '您已被經濟系玩家偷取%d的錢幣' % self.money * 0.1
-                    component.money += self.money * 0.1
-                    self.money -= self.money * 0.1
-                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
-                    return True
-
-                elif component == '中文':
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
-                    textLine2 = '是否要攻打' + component + '的城堡?' 
-                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    textLine4 = '中文系玩家被動技能為【%s】' % land.owner.PassiveAbility
-                    textLine5 = '經過中文系玩家土地(含城堡)時，除了被收取過路費外，還會被偷取1錢幣'
-                    textLine6 = '您已被中文系玩家偷取1錢幣'
-                    component.money += 1
-                    self.money -= 1
-                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
-                    return True
-
-                else:
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
-                    textLine2 = '是否要攻打' + component + '的城堡?' 
-                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    self.showText = [textLine0, textLine1, textLine2, textLine3]
-                    return 0 # main函數根據0來執行是否攻打城堡
-
-        else: # 骰到機會命運的格子
+	if land.name == '機會命運': # 骰到機會命運的格子
             whichone = random.randint(0, 6)
             if whichone == 0:
                 textLine2 = '機會命運: 這學期被當光'
@@ -274,11 +214,74 @@ class Player():
             textLine0 = self.name + '骰出了' + '%d' % self.dice_value + '點！'
             textLine1 = '來到了機會命運之地！'
             self.showText = [textLine0, textLine1, textLine2, textLine3]
+        elif land.name == "":
+            #will do
+	
+        else:
+            if land.wasBought == False: # 土地未被買時 顯示土地資訊(價格、過路費等等)
+                textLine0 = self.name +'骰出了' + '%d' % self.dice_value + '點！'
+                textLine1 = self.name +'來到了' + land.name + '!'
+                textLine2 = '購買價格：%d' % land.price
+                textLine3 = '過路收費：%d' % land.payment
+                textLine4 = '是否購買?'
+                self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
+                return True
 
+            elif land.owner == self.name: # 路過自己的土地 蓋城堡
+                if land.islocatedCastle == True:
+                    '''
+                    textline
+                    '''
+                else:
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了自己的'+ self.locatedLand.name + '!'
+                    textLine2 = '可以蓋城堡！' 
+                    textLine3 = '加蓋收費：%d' % land.payment
+                    textLine4 = '是否加蓋?'
+                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
+                    return True
 
+            else:
+                component = land.owner # 走到非自己土地上的敵方名字(科系)
+                if component == '經濟': # 經濟系技能
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
+                    textLine2 = '是否要攻打' + component + '的城堡?' 
+                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
+                    textLine4 = '經濟系玩家被動技能為【%s】' % land.owner.PassiveAbility
+                    textLine5 = '土地被踩到時，可偷取對方10%的錢幣'
+                    textLine6 = '您已被經濟系玩家偷取%d的錢幣' % self.money * 0.1
+                    component.money += self.money * 0.1
+                    self.money -= self.money * 0.1
+                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
+                    return True
+
+                elif component == '中文':
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
+                    textLine2 = '是否要攻打' + component + '的城堡?' 
+                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
+                    textLine4 = '中文系玩家被動技能為【%s】' % land.owner.PassiveAbility
+                    textLine5 = '經過中文系玩家土地(含城堡)時，除了被收取過路費外，還會被偷取1錢幣'
+                    textLine6 = '您已被中文系玩家偷取1錢幣'
+                    component.money += 1
+                    self.money -= 1
+                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
+                    return True
+
+                else:
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
+                    textLine2 = '是否要攻打' + component + '的城堡?' 
+                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
+                    self.showText = [textLine0, textLine1, textLine2, textLine3]
+                    return 0 # main函數根據0來執行是否攻打城堡
+        elif :
+		
+        
 
 class Land():                           
-    def __init__(self, name, price, payment, location, HP):
+    def __init__(self, name, price, payment, location, HP, creditLv):
         self.name = name                     # 土地名稱
         self.price = price                   # 土地價格
         self.payment = payment               # 土地過路費
@@ -288,11 +291,12 @@ class Land():
         self.islocatedCastle = False         # 土地是否有蓋城堡
         self.HP = HP                         # 土地血量(會變動)
         self.temp_HP = HP                    # 土地血量(不會變動)，用來重置血量當城堡被打掉時
+	self.credit = creditLv                 # 土地給的學分等級
 
 
 
 
-# 带透明度的绘图方法 by turtle 2333
+# 讓東西透明度可以調整，網路上的
 def blit_alpha(target,source,location,opacity):
     x = location[0]
     y = location[1]
@@ -305,7 +309,7 @@ def blit_alpha(target,source,location,opacity):
 
 
 
-########################################主函数###############################################    
+########################################主函數###############################################    
 
 
 def main():
@@ -317,15 +321,17 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("台大大富翁")
     
-    # 读取字体以及有关数据
+    # 讀取顏色
     textColorInMessageBox = (141,146,152)
     white = (255,255,255)
     black = (0,0,0)
     red = (255,0,0)
+    blue = (0,0,255)
     #font = pygame.font.Font('''''''')
     
     
-    # 读取资源
+    # 上傳圖片
+    # 基本
     backgroud = pygame.image.load("resource\\pic\\GameMap.png")
     chess = pygame.image.load("resource\\pic\\chess.png")
     chess_com =  pygame.image.load("resource\\pic\\chess1.png")
@@ -345,7 +351,8 @@ def main():
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
     turnover = pygame.image.load("resource\\pic\\turnover.png")
     turnover2 = pygame.image.load("resource\\pic\\turnover2.png")
-    #腳色Image TBD!!
+    
+    #玩家圖檔Image TBD
     imagePlayer0 = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
     imagePlayer1 = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
     imagePlayer2 = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
@@ -390,26 +397,29 @@ def main():
     allplayers.append(player4)
     presentPlayer = player1#由他開始
     
-    # 創造地方: name, price, payment, location, HP
-    lita_Land = Land('文學院',2,200,[1,2])
-    civ_Land = Land('土木系館',2000,400,[3,4])
-    fore_Land = Land('森林系館',800,160,[5])
-    engn_Land = Land('工綜',2000,400,[6,7])
-    law_Land = Land('霖澤館',0,0,[8])
-    hwoDa_Land = Land('活大',1200,240,[9,10])
-    library_Land = Land('總圖',1200,240,[11,12])
-    sea_Land = Land('工科海',800,160,[13])
-    mDorm_Land = Land('男一舍',800,160,[14])
-    fDorm_Land = Land('女一舍',800,160,[15])
-    life_Land = Land('生科館',0,0,[0])
-    mgmt1_Land = Land('館一',0,0,[0])
-    mgmt2_Land = Land('館二',0,0,[0])
-    admin_Land = Land('行政大樓',0,0,[0])
-    watermkt_Land = Land('水源',0,0,[0])
-    chengzhon_Land = Land('送往城中校區',0,0,[0])
-    gate_Land = Land('大門',0,0,[0])
-    philo_Land = Land('哲學系館',0,0,[0])
-    oppChance = Land('機會命運',0,0,[0])
+    # 創造地方:  name, price, payment, location, HP, creditLv
+    lita_Land = Land('文學院',2,2,[1,2],3,"low")
+    civ_Land = Land('土木系館',4,3,[3,4],5,"mid")
+    fore_Land = Land('森林系館',0,0,0,[0],"")#停一回合
+    engn_Land = Land('工綜',4,3,[6,7],5,"mid")
+    law_Land = Land('霖澤館',4,3,[8],5,"mid")
+    hwoDa_Land = Land('活大',6,2,[9,10],3,"low")
+    library_Land = Land('總圖',6,4,[11,12],7,"high")#
+    sea_Land = Land('工科海',4,3,[13],5,"mid")
+    mDorm_Land = Land('男一舍',2,2,[14],3,"low")
+    fDorm_Land = Land('女九自助餐',0,0,0,[0],"")#停一回合
+    mgmt1_Land = Land('館一',6,4,[0],7,"high")
+    mgmt2_Land = Land('館二',6,4,[0],7,"high")
+    admin_Land = Land('行政大樓',4,3,[0],5,"mid")
+    watermkt_Land = Land('水源市場',6,2,[0],3,"low")
+    chengzhon_Land = Land('送往城中校區',0,0,[0],0,"")#暫停一回合
+    social_Land = Land('社科院',2,4,[0],7,"high")
+    gate_Land = Land('大門',0,0,[0],0,"")#沒事
+    philo_Land = Land('哲學系館',2,2,[0],3,"low")
+    oppChance1 = Land('機會命運',0,0,[0],0,0)
+    oppChance2 = Land('機會命運',0,0,[0],0,0)
+    oppChance3 = Land('機會命運',0,0,[0],0,0)
+    oppChance4 = Land('機會命運',0,0,[0],0,0)
    
     
     buildings = [gate,fountain,path,library,classroomNine,\
@@ -419,7 +429,7 @@ def main():
 	
     
     
-    # 坐标数据 同时处理坐标数据 使之合适   座標數據等一下要改
+    # 座標數據等一下要改
     MapXYvalue = [(435.5,231.5),(509.5,231.5),(588.5,231.5),(675.5,231.5),(758.5,231.5),\
                   (758.5,317.0),(758.5,405.5),(758.5,484.5),(758.5,558.5),(679.5,558.5),\
                   (601.5,558.5),(518.5,556.5),(435.5,556.5),(435.5,479.5),(435.5,399.0),\
@@ -437,8 +447,8 @@ def main():
     TurnOvwrButtonPosition = (1035,613)
     
     
-                # 调整位置
-    for i in range(0,24):
+                # 調整位置
+    for i in range(0,16):
         MapChessPosition_Original.append((MapXYvalue[i][0]-50,MapXYvalue[i][1]-80))
         MapChessPosition_Player.append((MapXYvalue[i][0]-70,MapXYvalue[i][1]-60))
         MapChessPosition_Com.append((MapXYvalue[i][0]-30,MapXYvalue[i][1]-100))
@@ -448,7 +458,7 @@ def main():
     
         
     
-    # 循环时所用的一些变量      
+    # 循環用      
     running = True
     image_alpha = 255
     button_alpha = 255
@@ -463,12 +473,11 @@ def main():
     selectcharacter = False
     showButton2 = False
     selected = []#選角的時候用
-    Medic_Skills_counter = 0#判斷醫學系技能剩下次數
-    Medic_harmed_buildings = []			      
+    
     # 播放背景音樂
     pygame.mixer.music.play(100)
     
-########################################进入游戏循环！###############################################    
+########################################遊戲循環開始！###############################################    
 
 
    # 循環開始！ 
@@ -486,9 +495,8 @@ def main():
 			if Selectcharacter:				 
 				allset = 0#當四個腳色都選好，發動遊戲開始
 				selected = []
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    
-                    if button_player1.collidepoint(event.pos) and allset == 0: # 按下按钮            
+        if event.type == pygame.MOUSEBUTTONDOWN:          
+                        if button_player1.collidepoint(event.pos) and allset == 0: # 按下按钮            
 					ismajor = random.randint(0,9)
 					for i in range(len(majorlist)):#where is the majorlist??
 						if i == ismajor:
@@ -560,7 +568,7 @@ def main():
 				textPosition[1] += 30
 			
 			#在每一個地點上，印出血量
-			for i in range(1,3):#1,3要看總共幾個建築，3是機會命運牌
+			for i in range(1,8):#1,8要看總共幾個建築，8是機會命運牌
 				for each in buildings:
 					for every in each.location:
 						if i == every:
@@ -580,7 +588,7 @@ def main():
 							
 							screen.blit(text,MapChessPosition_Payment[i])
 					
-					for i in range(4, 9):#9是機會卡
+					for i in range(9,16):#16是原點
 						for each in buildings:
 							for every in each.location:
 								if i == every:
@@ -597,67 +605,7 @@ def main():
 								elif each.owner == allplayers[3]:
 									text = font.render('%d' % (each.HP)\
 														   , True, blue)
-								screen.blit(text,MapChessPosition_Payment[i]) 
-				        
-					for i in range(10, 15):#15是機會卡
-					    for each in buildings:
-							for every in each.location:
-								if i == every:
-									if each.owner == allplayers[0]:
-										text = font.render('%d' % (each.HP\
-														   , True, red)
-								elif each.owner == allplayers[1]:
-									text = font.render('%d' % (each.HP)\
-														   , True, white)
-							
-								elif each.owner == allplayers[2]:
-									text = font.render('%d' % (each.HP)\
-														   , True, black)
-								elif each.owner == allplayers[3]:
-									text = font.render('%d' % (each.HP)\
-														   , True, blue)
-								screen.blit(text,MapChessPosition_Payment[i]) 
-					
-					 for i in range(16,  22):#16為機會卡
-					     for each in buildings:
-							for every in each.location:
-								if i == every:
-									if each.owner == allplayers[0]:
-										text = font.render('%d' % (each.HP\
-														   , True, red)
-								elif each.owner == allplayers[1]:
-									text = font.render('%d' % (each.HP)\
-														   , True, white)
-							
-								elif each.owner == allplayers[2]:
-									text = font.render('%d' % (each.HP)\
-														   , True, black)
-								elif each.owner == allplayers[3]:
-									text = font.render('%d' % (each.HP)\
-														   , True, blue)
-								screen.blit(text,MapChessPosition_Payment[i]) 
-					    
-				         for i in range(23,24): #24為原點
-					     for each in buildings:
-							for every in each.location:
-								if i == every:
-									if each.owner == allplayers[0]:
-										text = font.render('%d' % (each.HP\
-														   , True, red)
-								elif each.owner == allplayers[1]:
-									text = font.render('%d' % (each.HP)\
-														   , True, white)
-							
-								elif each.owner == allplayers[2]:
-									text = font.render('%d' % (each.HP)\
-														   , True, black)
-								elif each.owner == allplayers[3]:
-									text = font.render('%d' % (each.HP)\
-														   , True, blue)
-								screen.blit(text,MapChessPosition_Payment[i]) 							   
-												   
-												   
-				        								   
+								screen.blit(text,MapChessPosition_Payment[i])                
 				
 				
 			#公佈欄:
@@ -707,9 +655,8 @@ def main():
 				if bigdice_rect.collidepoint(event.pos):
 					presentPlayer = allplayers[playerCount]
 					if presentPlayer.movable:
-						pygame.time.delay(2000)#故意停一下，假裝骰子在動								   
+						pygame.time.delay(2000)#故意停一下，假裝骰子在動
 						if presentPlayer.name == "哲學":
-						    if presentPlayer.credit >= 50:
 							#主動技能
 							textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
 							textline1 = '選擇轉系必須付出30%的學分!警告: 轉系是隨機事件!'
@@ -728,8 +675,8 @@ def main():
 								textline4 = '哈哈哈'
 								presentPlayer.showText.append([textline3, textline4])
 								presentPlayer.showText.pop([textline0, textline1])
-						     else:
-							       pass
+						 else:
+							   pass
 									
 							textline5 = '此角色被動技能為【%s】' % presentPlayer.PassiveAbility
 							textline6 = '擲骰子點數翻倍!'
@@ -740,49 +687,7 @@ def main():
 								textPosition[1] += 30
 							showYes_No = presentPlayer.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
 							whetherYes_NoJudge = showYes_No
-												   
-						if presentPlayer.name == "醫學":
-						    if Medic_Skills_counter < 2:
-							if len(presentPlayer.ownedLands) == 1 and presentPlayer.ownedLands[0].hp < presentPlayer.ownedLands[0].temp_hp:
-							   textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
-							   textline1 = '是否使用妙手回春？注意！ 妙手回春有使用限制'
-							   presentPlayer.showText = [textline0, textline1]
-							   whetheryesnojudge = True
-							   showYes_No = True
-							   if pressYes == True:	
-							       presentPlayer.ownedLands[0].hp = presentPlayer.ownedLands[0].temp_hp
-							       Medic_Skills_counter += 1
-							       texline3 = '你/妳受損的建築已回復'	
-							       presentPlayer.showText = [textline3]					   
-							if len(presentPlayer.ownedLands) > 1:
-							    for i in range(len(presentPlayer.owendLands)):
-							        if presentPlayer.owendLands[i].hp < presentPlayer.ownedLands[i].hp:
-								   Medic_harmed_buildings.append(i)				   
-                                                            if len(Medic_harmed_buildings) > 0:
-							       textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
-							       textline1 = '是否使用妙手回春？注意！ 妙手回春有使用限制'
-							       presentPlayer.showText = [textline0, textline1]
-							       whetheryesnojudge = True
-							       showYes_No = True
-							       if pressYes == True:	
-								    which_to_heal = random.randit(0,24)
-								    while which_to_heal not in  Medic_harmed_buildings:
-								        which_to_heal = random.randit(0,24)
-								    presentPlayer.ownedLands[which_to_heal].hp = presentPlayer.ownedLands[which_to_heal].temp_hp
-							            Medic_Skills_counter += 1
-								    texline3 = '你/妳受損的建築已回復'	
-							            presentPlayer.showText = [textline3]
-						    for each in presentPlayer.showText:
-						        text = font.render(each, True, white, textColorInMessageBox)
-							screen.blit(text,textPosition)
-							textPosition[1] += 30
-							showYes_No = presentPlayer.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
-							whetherYes_NoJudge = showYes_No						   
-												   
-							    					   
-							   					   
-							    					   
-						if presentPlayer.name != "哲學" and presentPlayer.name != "醫學":
+						else:
 							showYes_No = presentPlayer.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
 							whetherYes_NoJudge = showYes_No
 							
@@ -887,6 +792,6 @@ def main():
     
             
 
-# 双击打开运行            
+# 點兩下檔案就會自動開始執行!            
 if __name__ == "__main__":
     main()           
