@@ -14,14 +14,16 @@ characters_dict = {'土木': {'credit': 140, 'attack': 4, 'ActiveAbility': None,
         '經濟': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '一隻看不見的手'}, \
             '醫學': {'credit': 229, 'attack': 5, 'ActiveAbility': '妙手回春', 'PassiveAbility': None}, \
                 '哲學': {'credit': 128, 'attack': 3, 'ActiveAbility': '你轉系了嗎', 'PassiveAbility': '我唯一知道的，就是我什麼都不知道'}, '中文': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '讀書人的事...怎麼能算偷呢'}, \
-                    '生命科學院': {'生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ'}, \
-                        '法律學院':{'法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉'}}
+                    '生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ'}, \
+                        '法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉'}}
 
 class Player():
     def __init__(self, image, name, graduationCredit, attack, ActiveAbility, PassiveAbility, definition):
         self.name = name                    # 角色(科系)
         self.money = 10                     # 星星數
         self.credit = 0                     # 目前學分數
+        self.getcredit = 0                  # 每回合可獲得的學分數
+        self.getmoney = 0                   # 每回合可獲得的錢幣
         self.graduationCredit = graduationCredit       # 畢業學分數(取決於角色)
         self.attack = attack                 # 攻擊力(取決於角色)
         self.creditable = True              # 每回合結束可否拿學分
@@ -38,7 +40,7 @@ class Player():
         self.showText = []                
         self.ownedLands = []                # 總共持有的土地
         self.isShowText = False
-	self.definition = definition
+	    self.definition = definition
         # 每回合一些變數要重新用回初始值，因過程可能改變，像是movable，creditable
     
 
@@ -52,6 +54,18 @@ class Player():
     def isBuyingLand(self, isPressYes):    # 是否購買土地
         if isPressYes and self.locatedLand.owner == None:
             if self.name == '土木':
+                if self.locatedLand.level == 'low':
+                    self.getmoney = 2
+                    self.getcredit = 1
+                    self.payment += 2
+                elif self.locatedLand.level == 'medium':
+                    self.getmoney = 3
+                    self.getcredit = 2
+                    self.payment += 3
+                else:
+                    self.getmoney = 4
+                    self.getcredit = 3
+                    self.payment += 4
                 self.locatedLand.owner = self.name
                 self.locatedLand.wasBought = True
                 self.ownedLands.append(self.locatedLand)
@@ -63,6 +77,18 @@ class Player():
                 self.showText = [textline0, textline1, textline2, textline3]
                 return True
             else:
+                if self.locatedLand.level == 'low':
+                    self.getmoney = 2
+                    self.getcredit = 1
+                    self.payment += 2
+                elif self.locatedLand.level == 'medium':
+                    self.getmoney = 3
+                    self.getcredit = 2
+                    self.payment += 3
+                else:
+                    self.getmoney = 4
+                    self.getcredit = 3
+                    self.payment += 4
                 self.locatedLand.owner = self.name
                 self.locatedLand.wasBought = True
                 self.ownedLands.append(self.locatedLand)
@@ -77,29 +103,75 @@ class Player():
         try:
             if isPressYes and self.locatedLand.owner == self.name:
                 if self.name == '土木': # 土木系技能
+                    if self.locatedLand.level == 'low':
+                        self.getmoney = 4
+                        self.getcredit = 2
+                        self.payment += 2
+                        self.locatedLand.HP += 4
+                    elif self.locatedLand.level == 'medium':
+                        self.getmoney = 6
+                        self.getcredit = 3
+                        self.payment += 3
+                        self.locatedLand.HP += 5
+                    else:
+                        self.getmoney = 8
+                        self.getcredit = 4
+                        self.payment += 4
+                        self.locatedLand.HP += 5
                     self.money -= self.locatedLand.price * 0.9
                     textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
                     textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1
+                    self.locatedLand.islocatedCastle = True
                     self.showText = [textline0, textline1, textline2, textline3]
                     return True
 
                 elif self.name == '機械': # 機械系技能
+                    if self.locatedLand.level == 'low':
+                        self.getmoney = 4
+                        self.getcredit = 2
+                        self.payment += 2
+                        self.locatedLand.HP += 4
+                    elif self.locatedLand.level == 'medium':
+                        self.getmoney = 6
+                        self.getcredit = 3
+                        self.payment += 3
+                        self.locatedLand.HP += 5
+                    else:
+                        self.getmoney = 8
+                        self.getcredit = 4
+                        self.payment += 4
+                        self.locatedLand.HP += 5
                     textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '建蓋城堡後，城堡升級，血量+10!'
+                    self.locatedLand.islocatedCastle = True
                     self.locatedLand.HP += 10
                     self.showText = [textline0, textline1, textline2]
                     return True
                 
                 else:
+                    if self.locatedLand.level == 'low':
+                        self.getmoney = 4
+                        self.getcredit = 2
+                        self.payment += 2
+                        self.locatedLand.HP += 4
+                    elif self.locatedLand.level == 'medium':
+                        self.getmoney = 6
+                        self.getcredit = 3
+                        self.payment += 3
+                        self.locatedLand.HP += 5
+                    else:
+                        self.getmoney = 8
+                        self.getcredit = 4
+                        self.payment += 4
+                        self.locatedLand.HP += 5
                     self.money -= self.locatedLand.payment
                     self.showText = [self.name + '在' + self.locatedLand.name + '建蓋了城堡！',\
                                 '它的過路費是%d' % self.locatedLand.payment]
-                    self.soundPlayList = 2
                     self.locatedLand.islocatedCastle = True
                     return True
             else:
