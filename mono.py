@@ -344,11 +344,21 @@ def main():
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
     turnover = pygame.image.load("resource\\pic\\turnover.png")
     turnover2 = pygame.image.load("resource\\pic\\turnover2.png")
-    shuaishen = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
-    tudishen = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
-    caishen = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
-    pohuaishen = pygame.image.load("resource\\pic\\pohuaishen.png").convert_alpha()
+    #腳色Image TBD!!
+    imagePlayer0 = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
+    imagePlayer1 = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
+    imagePlayer2 = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
+    imagePlayer3 = pygame.image.load("resource\\pic\\pohuaishen.png").convert_alpha()
+    imagePlayer4 = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
+    imagePlayer5 = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
+    imagePlayer6 = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
+    imagePlayer7 = pygame.image.load("resource\\pic\\pohuaishen.png").convert_alpha()
+    imagePlayer8 = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
+    imagePlayer9 = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
     
+    
+    imagePlayers = {"土木":imagePlayer0, "機械":imagePlayer1, "國企":imagePlayer2, '會計':imagePlayer3, '經濟':imagePlayer4\
+		   '醫學':imagePlayer5, '哲學':imagePlayer6, '中文':imagePlayer7, '生科':imagePlayer8, '法律':imagePlayer9}#dictionary of images of players, keys = "name"
 
     
     # 各种Surface的rect 
@@ -363,36 +373,48 @@ def main():
     turnover_rect = turnover.get_rect()
     turnover_rect.left , turnover_rect.top = 1035,613
     
-    # 实例化对象
-    players = []
-    computers = []
-    allplayers = []
-    player_1 = Player(chess , '玩家' , True )
-    player_com1 = Player(chess_com , '电脑' , False )
-    players.append(player_1)
-    computers.append(player_com1)
-    allplayers.append(player_1)
-    allplayers.append(player_com1)
+    # 創造玩家
+    allplayers = []#共四個角色
+    player1 = Player(imagePlayers[name1], name1, characters_dict[name1]["credit"], characters_dict[name1]["attack"]\
+		    characters_dict[name1]["ActiveAbility"], characters_dict[name1]["PassiveAbility"] )
+    allplayers.append(player1)
+    player2 = Player(imagePlayers[name2], name2, characters_dict[name2]["credit"], characters_dict[name2]["attack"]\
+		    characters_dict[name2]["ActiveAbility"], characters_dict[name2]["PassiveAbility"] )
+    allplayers.append(player2)
+    player3 = Player(imagePlayers[name3], name3, characters_dict[name3]["credit"], characters_dict[name3]["attack"]\
+		    characters_dict[name3]["ActiveAbility"], characters_dict[name3]["PassiveAbility"] )
+    allplayers.append(player3)
+    player4 = Player(imagePlayers[name4], name4, characters_dict[name4]["credit"], characters_dict[name4]["attack"]\
+		    characters_dict[name4]["ActiveAbility"], characters_dict[name4]["PassiveAbility"] )
+    allplayers.append(player4)
+    presentPlayer = player1#由他開始
     
-    presentPlayer = player_com1
-    
-    # 初始化建筑物数据
-    gate = Building('大门',1000,200,[1,2])
-    fountain = Building('喷泉',2000,400,[3,4])
-    path = Building('小道',800,160,[5])
-    library = Building('图书馆',2000,400,[6,7])
-    kongdi1 = Building('空地',0,0,[8])
-    classroomTen = Building('教十',1200,240,[9,10])
-    classroomNine = Building('教九',1200,240,[11,12])
-    resOne = Building('三餐厅',800,160,[13])
-    resTwo = Building('二餐厅',800,160,[14])
-    resThree = Building('一餐厅',800,160,[15])
-    kongdi2 = Building('空地',0,0,[0])
+    # 創造地方: name, price, payment, location, HP
+    lita_Land = Land('文學院',2,200,[1,2])
+    civ_Land = Land('土木系館',2000,400,[3,4])
+    fore_Land = Land('森林系館',800,160,[5])
+    engn_Land = Land('工綜',2000,400,[6,7])
+    law_Land = Land('霖澤館',0,0,[8])
+    hwoDa_Land = Land('活大',1200,240,[9,10])
+    library_Land = Land('總圖',1200,240,[11,12])
+    sea_Land = Land('工科海',800,160,[13])
+    mDorm_Land = Land('男一舍',800,160,[14])
+    fDorm_Land = Land('女一舍',800,160,[15])
+    life_Land = Land('生科館',0,0,[0])
+    mgmt1_Land = Land('館一',0,0,[0])
+    mgmt2_Land = Land('館二',0,0,[0])
+    admin_Land = Land('行政大樓',0,0,[0])
+    watermkt_Land = Land('水源',0,0,[0])
+    chengzhon_Land = Land('送往城中校區',0,0,[0])
+    gate_Land = Land('大門',0,0,[0])
+    philo_Land = Land('哲學系館',0,0,[0])
+    oppChance = Land('機會命運',0,0,[0])
+   
     
     buildings = [gate,fountain,path,library,classroomNine,\
                  classroomTen,resOne,resThree,resTwo,kongdi1,kongdi2]
     
-	majorlist = ['土木', '機械', '國企', '會計', '經濟', '醫學', '哲學', '中文', '生科' ,'法律']
+    majorlist = ['土木', '機械', '國企', '會計', '經濟', '醫學', '哲學', '中文', '生科' ,'法律']
 	
     
     
@@ -438,16 +460,15 @@ def main():
     whetherYes_NoJudge = False
     gameStarted = False
     selectcharacter = False
-    majorList = []
     showButton2 = False
-    
-    # 播放背景音乐
+    selected = []#選角的時候用
+    # 播放背景音樂
     pygame.mixer.music.play(100)
     
 ########################################进入游戏循环！###############################################    
 
 
-   # 循环开始！ 
+   # 循環開始！ 
     while running:
         if not gameStarted:
 			if not Selectcharacter:
@@ -468,8 +489,8 @@ def main():
 					ismajor = random.randint(0,9)
 					for i in range(len(majorlist)):#where is the majorlist??
 						if i == ismajor:
-						    name1 = majorlist[i]
-						    selected.append(i)
+						    name1 = majorlist[i]#player1 是誰決定好了!
+						    selected.append(i)#紀錄，避免重複
 						allset += 1
 						blit_alpha(screen,text , 'position', 'color')
 						
