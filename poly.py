@@ -22,6 +22,8 @@ class Player():
         self.name = name                    # 角色(科系)
         self.money = 10                     # 星星數
         self.credit = 0                     # 目前學分數
+        self.getcredit = 0                  # 每回合可獲得的學分數
+        self.getmoney = 0                   # 每回合可獲得的錢幣
         self.graduationCredit = graduationCredit       # 畢業學分數(取決於角色)
         self.attack = attack                 # 攻擊力(取決於角色)
         self.creditable = True              # 每回合結束可否拿學分
@@ -38,7 +40,7 @@ class Player():
         self.showText = []                
         self.ownedLands = []                # 總共持有的土地
         self.isShowText = False
-	self.definition = definition
+	    self.definition = definition
         # 每回合一些變數要重新用回初始值，因過程可能改變，像是movable，creditable
     
 
@@ -52,6 +54,18 @@ class Player():
     def isBuyingLand(self, isPressYes):    # 是否購買土地
         if isPressYes and self.locatedLand.owner == None:
             if self.name == '土木':
+                if self.locatedLand.level == 'low':
+                    self.getmoney = 2
+                    self.getcredit = 1
+                    self.payment += 2
+                elif self.locatedLand.level == 'medium':
+                    self.getmoney = 3
+                    self.getcredit = 2
+                    self.payment += 3
+                else:
+                    self.getmoney = 4
+                    self.getcredit = 3
+                    self.payment += 4
                 self.locatedLand.owner = self.name
                 self.locatedLand.wasBought = True
                 self.ownedLands.append(self.locatedLand)
@@ -63,6 +77,18 @@ class Player():
                 self.showText = [textline0, textline1, textline2, textline3]
                 return True
             else:
+                if self.locatedLand.level == 'low':
+                    self.getmoney = 2
+                    self.getcredit = 1
+                    self.payment += 2
+                elif self.locatedLand.level == 'medium':
+                    self.getmoney = 3
+                    self.getcredit = 2
+                    self.payment += 3
+                else:
+                    self.getmoney = 4
+                    self.getcredit = 3
+                    self.payment += 4
                 self.locatedLand.owner = self.name
                 self.locatedLand.wasBought = True
                 self.ownedLands.append(self.locatedLand)
@@ -77,29 +103,75 @@ class Player():
         try:
             if isPressYes and self.locatedLand.owner == self.name:
                 if self.name == '土木': # 土木系技能
+                    if self.locatedLand.level == 'low':
+                        self.getmoney = 4
+                        self.getcredit = 2
+                        self.payment += 2
+                        self.locatedLand.HP += 4
+                    elif self.locatedLand.level == 'medium':
+                        self.getmoney = 6
+                        self.getcredit = 3
+                        self.payment += 3
+                        self.locatedLand.HP += 5
+                    else:
+                        self.getmoney = 8
+                        self.getcredit = 4
+                        self.payment += 4
+                        self.locatedLand.HP += 5
                     self.money -= self.locatedLand.price * 0.9
                     textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
                     textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1
+                    self.locatedLand.islocatedCastle = True
                     self.showText = [textline0, textline1, textline2, textline3]
                     return True
 
                 elif self.name == '機械': # 機械系技能
+                    if self.locatedLand.level == 'low':
+                        self.getmoney = 4
+                        self.getcredit = 2
+                        self.payment += 2
+                        self.locatedLand.HP += 4
+                    elif self.locatedLand.level == 'medium':
+                        self.getmoney = 6
+                        self.getcredit = 3
+                        self.payment += 3
+                        self.locatedLand.HP += 5
+                    else:
+                        self.getmoney = 8
+                        self.getcredit = 4
+                        self.payment += 4
+                        self.locatedLand.HP += 5
                     textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '建蓋城堡後，城堡升級，血量+10!'
+                    self.locatedLand.islocatedCastle = True
                     self.locatedLand.HP += 10
                     self.showText = [textline0, textline1, textline2]
                     return True
                 
                 else:
+                    if self.locatedLand.level == 'low':
+                        self.getmoney = 4
+                        self.getcredit = 2
+                        self.payment += 2
+                        self.locatedLand.HP += 4
+                    elif self.locatedLand.level == 'medium':
+                        self.getmoney = 6
+                        self.getcredit = 3
+                        self.payment += 3
+                        self.locatedLand.HP += 5
+                    else:
+                        self.getmoney = 8
+                        self.getcredit = 4
+                        self.payment += 4
+                        self.locatedLand.HP += 5
                     self.money -= self.locatedLand.payment
                     self.showText = [self.name + '在' + self.locatedLand.name + '建蓋了城堡！',\
                                 '它的過路費是%d' % self.locatedLand.payment]
-                    self.soundPlayList = 2
                     self.locatedLand.islocatedCastle = True
                     return True
             else:
@@ -155,69 +227,7 @@ class Player():
 
     def eventInPosition(self, allplayers):        # 判斷在土地位置應該發生事件        
         land = self.locatedLand
-		if land.name == '機會命運': # 骰到機會命運的格子
-            whichone = random.randint(0, 6)
-            if whichone == 0:
-                textLine2 = '機會命運: 這學期被當光'
-                textLine3 = '當回合拿不到學分！'
-                self.creditable = False
-
-            if whichone == 1:
-                if self.money >= 5:
-                    textLine2 = '機會命運: 出國進修喝洋墨水'
-                    textLine3 = '花費5錢幣，攻擊力上升1點'
-                    self.money -= 5
-                    self.attack += 1
-                else:
-                    textLine2 = '機會命運: 出國進修'
-                    textLine3 = '花費5錢幣，攻擊力上升1點，但因錢幣不夠，無法獲得此功能'
-                    pass
-
-            if whichone == 2:
-                textLine2 = '機會命運: 水源阿伯之逆襲'
-                textLine3 = '腳踏車被拖吊，下一回合不能行動'
-                self.movable = False
-
-            if whichone == 3:
-                textLine2 = '機會命運: 抱強者粗大腿'
-                textLine3 = '獲得學分最高玩家學分數的20%'
-                credits_list = []
-                for player in allplayers:
-                    credits_list.append(player.credit)
-                self.credit += credits_list.max() * 0.2
-
-            if whichone == 4:
-                textLine2 = '機會命運: 舟山路大淹水'
-                textLine3 = '醫學系以外的玩家因為交通阻塞，下一回合不能行動'
-                for player in allplayers:
-                    if player.name != '醫學':
-                        player.movable = False # 這邊只設定停止一回合
-
-            if whichone == 5:
-                textLine2 = '機會命運: 凱道誓師大會'
-                textLine3 = '醫學系的玩家因為交通阻塞，下一回合不能行動'
-                for player in allplayers:
-                    if player.name == '醫學':
-                        player.movable = False # 這邊只設定停止一回合
-
-            if whichone == 6:
-                if self.money >= 5:
-                    textLine2 = '機會命運: 暑修危機分'
-                    textLine3 = '花費5錢幣，學分數上升3點'
-                    self.money -= 5
-                    self.credit += 3
-                else:
-                    textLine2 = '暑修危機分'
-                    textLine3 = '花費5錢幣，學分數上升3點，但因錢幣不夠，無法獲得此功能'
-                    pass
-
-            textLine0 = self.name + '骰出了' + '%d' % self.dice_value + '點！'
-            textLine1 = '來到了機會命運之地！'
-            self.showText = [textLine0, textLine1, textLine2, textLine3]
-        elif land.name == "":
-            #will do
-	
-        else:
+        if land.name != '機會命運':
             if land.wasBought == False: # 土地未被買時 顯示土地資訊(價格、過路費等等)
                 textLine0 = self.name +'骰出了' + '%d' % self.dice_value + '點！'
                 textLine1 = self.name +'來到了' + land.name + '!'
@@ -276,7 +286,66 @@ class Player():
                     textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
                     self.showText = [textLine0, textLine1, textLine2, textLine3]
                     return 0 # main函數根據0來執行是否攻打城堡
-        elif :
+
+        else: # 骰到機會命運的格子
+            whichone = random.randint(0, 6)
+            if whichone == 0:
+                textLine2 = '機會命運: 這學期被當光'
+                textLine3 = '當回合拿不到學分！'
+                self.creditable = False
+
+            if whichone == 1:
+                if self.money >= 5:
+                    textLine2 = '機會命運: 出國進修喝洋墨水'
+                    textLine3 = '花費5錢幣，攻擊力上升1點'
+                    self.money -= 5
+                    self.attack += 1
+                else:
+                    textLine2 = '機會命運: 出國進修'
+                    textLine3 = '花費5錢幣，攻擊力上升1點，但因錢幣不夠，無法獲得此功能'
+                    pass
+
+            if whichone == 2:
+                textLine2 = '機會命運: 水源阿伯之逆襲'
+                textLine3 = '腳踏車被拖吊，下一回合不能行動'
+                self.movable = False
+
+            if whichone == 3:
+                textLine2 = '機會命運: 抱強者粗大腿'
+                textLine3 = '獲得學分最高玩家學分數的20%'
+                credits_list = []
+                for player in allplayers:
+                    credits_list.append(player.credit)
+                self.credit += credits_list.max() * 0.2
+
+            if whichone == 4:
+                textLine2 = '機會命運: 舟山路大淹水'
+                textLine3 = '醫學系以外的玩家因為交通阻塞，下一回合不能行動'
+                for player in allplayers:
+                    if player.name != '醫學':
+                        player.movable = False # 這邊只設定停止一回合
+
+            if whichone == 5:
+                textLine2 = '機會命運: 凱道誓師大會'
+                textLine3 = '醫學系的玩家因為交通阻塞，下一回合不能行動'
+                for player in allplayers:
+                    if player.name == '醫學':
+                        player.movable = False # 這邊只設定停止一回合
+
+            if whichone == 6:
+                if self.money >= 5:
+                    textLine2 = '機會命運: 暑修危機分'
+                    textLine3 = '花費5錢幣，學分數上升3點'
+                    self.money -= 5
+                    self.credit += 3
+                else:
+                    textLine2 = '暑修危機分'
+                    textLine3 = '花費5錢幣，學分數上升3點，但因錢幣不夠，無法獲得此功能'
+                    pass
+
+            textLine0 = self.name + '骰出了' + '%d' % self.dice_value + '點！'
+            textLine1 = '來到了機會命運之地！'
+            self.showText = [textLine0, textLine1, textLine2, textLine3]
 		
         
 
