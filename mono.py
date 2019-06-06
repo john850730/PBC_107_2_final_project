@@ -22,8 +22,6 @@ class Player():
         self.name = name                    # 角色(科系)
         self.money = 10                     # 星星數
         self.credit = 0                     # 目前學分數
-        self.getcredit = 0                  # 每回合可獲得的學分數
-        self.getmoney = 0                   # 每回合可獲得的錢幣
         self.graduationCredit = graduationCredit       # 畢業學分數(取決於角色)
         self.attack = attack                 # 攻擊力(取決於角色)
         self.creditable = True              # 每回合結束可否拿學分
@@ -40,7 +38,7 @@ class Player():
         self.showText = []                
         self.ownedLands = []                # 總共持有的土地
         self.isShowText = False
-	    self.definition = definition
+	self.definition = definition
         # 每回合一些變數要重新用回初始值，因過程可能改變，像是movable，creditable
     
 
@@ -54,18 +52,6 @@ class Player():
     def isBuyingLand(self, isPressYes):    # 是否購買土地
         if isPressYes and self.locatedLand.owner == None:
             if self.name == '土木':
-                if self.locatedLand.level == 'low':
-                    self.getmoney = 2
-                    self.getcredit = 1
-                    self.payment += 2
-                elif self.locatedLand.level == 'medium':
-                    self.getmoney = 3
-                    self.getcredit = 2
-                    self.payment += 3
-                else:
-                    self.getmoney = 4
-                    self.getcredit = 3
-                    self.payment += 4
                 self.locatedLand.owner = self.name
                 self.locatedLand.wasBought = True
                 self.ownedLands.append(self.locatedLand)
@@ -77,18 +63,6 @@ class Player():
                 self.showText = [textline0, textline1, textline2, textline3]
                 return True
             else:
-                if self.locatedLand.level == 'low':
-                    self.getmoney = 2
-                    self.getcredit = 1
-                    self.payment += 2
-                elif self.locatedLand.level == 'medium':
-                    self.getmoney = 3
-                    self.getcredit = 2
-                    self.payment += 3
-                else:
-                    self.getmoney = 4
-                    self.getcredit = 3
-                    self.payment += 4
                 self.locatedLand.owner = self.name
                 self.locatedLand.wasBought = True
                 self.ownedLands.append(self.locatedLand)
@@ -103,75 +77,29 @@ class Player():
         try:
             if isPressYes and self.locatedLand.owner == self.name:
                 if self.name == '土木': # 土木系技能
-                    if self.locatedLand.level == 'low':
-                        self.getmoney = 4
-                        self.getcredit = 2
-                        self.payment += 2
-                        self.locatedLand.HP += 4
-                    elif self.locatedLand.level == 'medium':
-                        self.getmoney = 6
-                        self.getcredit = 3
-                        self.payment += 3
-                        self.locatedLand.HP += 5
-                    else:
-                        self.getmoney = 8
-                        self.getcredit = 4
-                        self.payment += 4
-                        self.locatedLand.HP += 5
                     self.money -= self.locatedLand.price * 0.9
                     textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
                     textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1
-                    self.locatedLand.islocatedCastle = True
                     self.showText = [textline0, textline1, textline2, textline3]
                     return True
 
                 elif self.name == '機械': # 機械系技能
-                    if self.locatedLand.level == 'low':
-                        self.getmoney = 4
-                        self.getcredit = 2
-                        self.payment += 2
-                        self.locatedLand.HP += 4
-                    elif self.locatedLand.level == 'medium':
-                        self.getmoney = 6
-                        self.getcredit = 3
-                        self.payment += 3
-                        self.locatedLand.HP += 5
-                    else:
-                        self.getmoney = 8
-                        self.getcredit = 4
-                        self.payment += 4
-                        self.locatedLand.HP += 5
                     textline0 = self.name + '在' + self.locatedLand.name + '建蓋了城堡!' + \
                         '它的過路費是%d' % self.locatedLand.payment
                     textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                     textline2 = '建蓋城堡後，城堡升級，血量+10!'
-                    self.locatedLand.islocatedCastle = True
                     self.locatedLand.HP += 10
                     self.showText = [textline0, textline1, textline2]
                     return True
                 
                 else:
-                    if self.locatedLand.level == 'low':
-                        self.getmoney = 4
-                        self.getcredit = 2
-                        self.payment += 2
-                        self.locatedLand.HP += 4
-                    elif self.locatedLand.level == 'medium':
-                        self.getmoney = 6
-                        self.getcredit = 3
-                        self.payment += 3
-                        self.locatedLand.HP += 5
-                    else:
-                        self.getmoney = 8
-                        self.getcredit = 4
-                        self.payment += 4
-                        self.locatedLand.HP += 5
                     self.money -= self.locatedLand.payment
                     self.showText = [self.name + '在' + self.locatedLand.name + '建蓋了城堡！',\
                                 '它的過路費是%d' % self.locatedLand.payment]
+                    self.soundPlayList = 2
                     self.locatedLand.islocatedCastle = True
                     return True
             else:
@@ -227,67 +155,7 @@ class Player():
 
     def eventInPosition(self, allplayers):        # 判斷在土地位置應該發生事件        
         land = self.locatedLand
-        if land.name != '機會命運':
-            if land.wasBought == False: # 土地未被買時 顯示土地資訊(價格、過路費等等)
-                textLine0 = self.name +'骰出了' + '%d' % self.dice_value + '點！'
-                textLine1 = self.name +'來到了' + land.name + '!'
-                textLine2 = '購買價格：%d' % land.price
-                textLine3 = '過路收費：%d' % land.payment
-                textLine4 = '是否購買?'
-                self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
-                return True
-
-            elif land.owner == self.name: # 路過自己的土地 蓋城堡
-                if land.islocatedCastle == True:
-                    '''
-                    textline
-                    '''
-                else:
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了自己的'+ self.locatedLand.name + '!'
-                    textLine2 = '可以蓋城堡！' 
-                    textLine3 = '加蓋收費：%d' % land.payment
-                    textLine4 = '是否加蓋?'
-                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
-                    return True
-
-            else:
-                component = land.owner # 走到非自己土地上的敵方名字(科系)
-                if component == '經濟': # 經濟系技能
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
-                    textLine2 = '是否要攻打' + component + '的城堡?' 
-                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    textLine4 = '經濟系玩家被動技能為【%s】' % land.owner.PassiveAbility
-                    textLine5 = '土地被踩到時，可偷取對方10%的錢幣'
-                    textLine6 = '您已被經濟系玩家偷取%d的錢幣' % self.money * 0.1
-                    component.money += self.money * 0.1
-                    self.money -= self.money * 0.1
-                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
-                    return True
-
-                elif component == '中文':
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
-                    textLine2 = '是否要攻打' + component + '的城堡?' 
-                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    textLine4 = '中文系玩家被動技能為【%s】' % land.owner.PassiveAbility
-                    textLine5 = '經過中文系玩家土地(含城堡)時，除了被收取過路費外，還會被偷取1錢幣'
-                    textLine6 = '您已被中文系玩家偷取1錢幣'
-                    component.money += 1
-                    self.money -= 1
-                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
-                    return True
-
-                else:
-                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
-                    textLine2 = '是否要攻打' + component + '的城堡?' 
-                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
-                    self.showText = [textLine0, textLine1, textLine2, textLine3]
-                    return 0 # main函數根據0來執行是否攻打城堡
-
-        else: # 骰到機會命運的格子
+	if land.name == '機會命運': # 骰到機會命運的格子
             whichone = random.randint(0, 6)
             if whichone == 0:
                 textLine2 = '機會命運: 這學期被當光'
@@ -346,11 +214,73 @@ class Player():
             textLine0 = self.name + '骰出了' + '%d' % self.dice_value + '點！'
             textLine1 = '來到了機會命運之地！'
             self.showText = [textLine0, textLine1, textLine2, textLine3]
+        elif land.name == "":
 
+        else:
+            if land.wasBought == False: # 土地未被買時 顯示土地資訊(價格、過路費等等)
+                textLine0 = self.name +'骰出了' + '%d' % self.dice_value + '點！'
+                textLine1 = self.name +'來到了' + land.name + '!'
+                textLine2 = '購買價格：%d' % land.price
+                textLine3 = '過路收費：%d' % land.payment
+                textLine4 = '是否購買?'
+                self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
+                return True
 
+            elif land.owner == self.name: # 路過自己的土地 蓋城堡
+                if land.islocatedCastle == True:
+                    '''
+                    textline
+                    '''
+                else:
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了自己的'+ self.locatedLand.name + '!'
+                    textLine2 = '可以蓋城堡！' 
+                    textLine3 = '加蓋收費：%d' % land.payment
+                    textLine4 = '是否加蓋?'
+                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4]
+                    return True
+
+            else:
+                component = land.owner # 走到非自己土地上的敵方名字(科系)
+                if component == '經濟': # 經濟系技能
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
+                    textLine2 = '是否要攻打' + component + '的城堡?' 
+                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
+                    textLine4 = '經濟系玩家被動技能為【%s】' % land.owner.PassiveAbility
+                    textLine5 = '土地被踩到時，可偷取對方10%的錢幣'
+                    textLine6 = '您已被經濟系玩家偷取%d的錢幣' % self.money * 0.1
+                    component.money += self.money * 0.1
+                    self.money -= self.money * 0.1
+                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
+                    return True
+
+                elif component == '中文':
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
+                    textLine2 = '是否要攻打' + component + '的城堡?' 
+                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
+                    textLine4 = '中文系玩家被動技能為【%s】' % land.owner.PassiveAbility
+                    textLine5 = '經過中文系玩家土地(含城堡)時，除了被收取過路費外，還會被偷取1錢幣'
+                    textLine6 = '您已被中文系玩家偷取1錢幣'
+                    component.money += 1
+                    self.money -= 1
+                    self.showText = [textLine0, textLine1, textLine2, textLine3, textLine4, textLine5, textLine6]
+                    return True
+
+                else:
+                    textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
+                    textLine1 = '來到了' + component + '的'+ self.locatedLand.name + '!'
+                    textLine2 = '是否要攻打' + component + '的城堡?' 
+                    textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
+                    self.showText = [textLine0, textLine1, textLine2, textLine3]
+                    return 0 # main函數根據0來執行是否攻打城堡
+        elif :
+		
+        
 
 class Land():                           
-    def __init__(self, name, price, payment, location, HP):
+    def __init__(self, name, price, payment, location, HP, creditLv):
         self.name = name                     # 土地名稱
         self.price = price                   # 土地價格
         self.payment = payment               # 土地過路費
@@ -360,11 +290,12 @@ class Land():
         self.islocatedCastle = False         # 土地是否有蓋城堡
         self.HP = HP                         # 土地血量(會變動)
         self.temp_HP = HP                    # 土地血量(不會變動)，用來重置血量當城堡被打掉時
+	self.credit = creditLv                 # 土地給的學分等級
 
 
 
 
-# 带透明度的绘图方法 by turtle 2333
+# 讓東西透明度可以調整，網路上的
 def blit_alpha(target,source,location,opacity):
     x = location[0]
     y = location[1]
@@ -377,7 +308,7 @@ def blit_alpha(target,source,location,opacity):
 
 
 
-########################################主函数###############################################    
+########################################主函數###############################################    
 
 
 def main():
@@ -389,15 +320,17 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("台大大富翁")
     
-    # 读取字体以及有关数据
+    # 讀取顏色
     textColorInMessageBox = (141,146,152)
     white = (255,255,255)
     black = (0,0,0)
     red = (255,0,0)
+    blue = (0,0,255)
     #font = pygame.font.Font('''''''')
     
     
-    # 读取资源
+    # 上傳圖片
+    # 基本
     backgroud = pygame.image.load("resource\\pic\\GameMap.png")
     chess = pygame.image.load("resource\\pic\\chess.png")
     chess_com =  pygame.image.load("resource\\pic\\chess1.png")
@@ -417,7 +350,8 @@ def main():
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
     turnover = pygame.image.load("resource\\pic\\turnover.png")
     turnover2 = pygame.image.load("resource\\pic\\turnover2.png")
-    #腳色Image TBD!!
+    
+    #玩家圖檔Image TBD
     imagePlayer0 = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
     imagePlayer1 = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
     imagePlayer2 = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
@@ -434,7 +368,7 @@ def main():
 		   '醫學':imagePlayer5, '哲學':imagePlayer6, '中文':imagePlayer7, '生科':imagePlayer8, '法律':imagePlayer9}#dictionary of images of players, keys = "name"
 
     
-    # 各種surface的rect
+    # 各种Surface的rect 
     bigdice_rect = bigdice_image.get_rect()
     bigdice_rect.left , bigdice_rect.top = 50 , 600
     yes_rect = yes.get_rect()
@@ -444,27 +378,7 @@ def main():
     button_rect = StartGameButton.get_rect()
     button_rect.left , button_rect.top = 1003,30
     turnover_rect = turnover.get_rect()
-    turnover_rect.left , turnover_rect.top = 1035,61
-    ce_rect  = imagePlayers{'土木'}.getrect()
-    ce_rect.left , ce_rect.top = 1003,30
-    me_rect  = imagePlayers{'機械'}.getrect()
-    me_rect.left , me_rect.top = 1003,30      
-    ib_rect  = imagePlayers{'國企'}.getrect()
-    ib_rect.left , ib_rect.top = 1003,30
-    acct_rect = imagePlayers{'會計'}.getrect()
-    acct_rect.left , acct_rect.top = 1003,30 
-    econ_rect  = imagePlayers{'經濟'}.getrect()
-    econ_rect.left , econ_rect.top = 1003,30  
-    med_rect  = imagePlayers{'醫學'}.getrect()
-    med_rect.left , med_rect.top = 1003,30
-    phy_rect  = imagePlayers{'哲學'}.getrect()
-    phy_rect.left , phy_rect.top = 1003,30  
-    chi_rect  = imagePlayers{'中文'}.getrect()
-    chi_rect.left , chi_rect.top = 1003,30
-    bio_rect  = imagePlayers{'生科'}.getrect()
-    bio_rect.left , bio_rect.top = 1003,30
-    law_rect  = imagePlayers{'法律'}.getrect()
-    law_rect.left , law_rect.top = 1003,30
+    turnover_rect.left , turnover_rect.top = 1035,613
     
     # 創造玩家
     allplayers = []#共四個角色
@@ -482,26 +396,29 @@ def main():
     allplayers.append(player4)
     presentPlayer = player1#由他開始
     
-    # 創造地方: name, price, payment, location, HP
-    lita_Land = Land('文學院',2,200,[1,2])
-    civ_Land = Land('土木系館',2000,400,[3,4])
-    fore_Land = Land('森林系館',800,160,[5])
-    engn_Land = Land('工綜',2000,400,[6,7])
-    law_Land = Land('霖澤館',0,0,[8])
-    hwoDa_Land = Land('活大',1200,240,[9,10])
-    library_Land = Land('總圖',1200,240,[11,12])
-    sea_Land = Land('工科海',800,160,[13])
-    mDorm_Land = Land('男一舍',800,160,[14])
-    fDorm_Land = Land('女一舍',800,160,[15])
-    life_Land = Land('生科館',0,0,[0])
-    mgmt1_Land = Land('館一',0,0,[0])
-    mgmt2_Land = Land('館二',0,0,[0])
-    admin_Land = Land('行政大樓',0,0,[0])
-    watermkt_Land = Land('水源',0,0,[0])
-    chengzhon_Land = Land('送往城中校區',0,0,[0])
-    gate_Land = Land('大門',0,0,[0])
-    philo_Land = Land('哲學系館',0,0,[0])
-    oppChance = Land('機會命運',0,0,[0])
+    # 創造地方:  name, price, payment, location, HP, creditLv
+    lita_Land = Land('文學院',2,2,[1,2],3,"low")
+    civ_Land = Land('土木系館',4,3,[3,4],5,"mid")
+    fore_Land = Land('森林系館',0,0,0,[0],"")#停一回合
+    engn_Land = Land('工綜',4,3,[6,7],5,"mid")
+    law_Land = Land('霖澤館',4,3,[8],5,"mid")
+    hwoDa_Land = Land('活大',6,2,[9,10],3,"low")
+    library_Land = Land('總圖',6,4,[11,12],7,"high")#
+    sea_Land = Land('工科海',4,3,[13],5,"mid")
+    mDorm_Land = Land('男一舍',2,2,[14],3,"low")
+    fDorm_Land = Land('女九餐廳',0,0,0,[0],"")#停一回合
+    mgmt1_Land = Land('館一',6,4,[0],7,"high")
+    mgmt2_Land = Land('館二',6,4,[0],7,"high")
+    admin_Land = Land('行政大樓',4,3,[0],5,"mid")
+    watermkt_Land = Land('水源市場',6,2,[0],3,"low")
+    chengzhon_Land = Land('送往城中校區',0,0,[0],0,"")#暫停一回合
+    social_Land = Land('社科院',2,4,[0],7,"high")
+    gate_Land = Land('大門',0,0,[0],0,"")#沒事
+    philo_Land = Land('哲學系館',2,2,[0],3,"low")
+    oppChance1 = Land('機會命運',0,0,[0],0,0)
+    oppChance2 = Land('機會命運',0,0,[0],0,0)
+    oppChance3 = Land('機會命運',0,0,[0],0,0)
+    oppChance4 = Land('機會命運',0,0,[0],0,0)
    
     
     buildings = [gate,fountain,path,library,classroomNine,\
@@ -511,7 +428,7 @@ def main():
 	
     
     
-    # 坐标数据 同时处理坐标数据 使之合适   座標數據等一下要改
+    # 座標數據等一下要改
     MapXYvalue = [(435.5,231.5),(509.5,231.5),(588.5,231.5),(675.5,231.5),(758.5,231.5),\
                   (758.5,317.0),(758.5,405.5),(758.5,484.5),(758.5,558.5),(679.5,558.5),\
                   (601.5,558.5),(518.5,556.5),(435.5,556.5),(435.5,479.5),(435.5,399.0),\
@@ -529,7 +446,7 @@ def main():
     TurnOvwrButtonPosition = (1035,613)
     
     
-                # 调整位置
+                # 調整位置
     for i in range(0,16):
         MapChessPosition_Original.append((MapXYvalue[i][0]-50,MapXYvalue[i][1]-80))
         MapChessPosition_Player.append((MapXYvalue[i][0]-70,MapXYvalue[i][1]-60))
@@ -540,7 +457,7 @@ def main():
     
         
     
-    # 循环时所用的一些变量      
+    # 循環用      
     running = True
     image_alpha = 255
     button_alpha = 255
@@ -559,83 +476,84 @@ def main():
     # 播放背景音樂
     pygame.mixer.music.play(100)
     
-########################################进入游戏循环！###############################################
-	# 循环开始！ 
+########################################遊戲循環開始！###############################################    
+
+
+   # 循環開始！ 
     while running:
         if not gameStarted:
-		if not Selectcharatcer
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					sys.exit()
-							
-				if event.type == pygame.MOUSEBUTTONDOWN:
-						 
-					if button_start.collidepoint(event.pos): # 按下按钮                    
-						Selectcharatcer = True  
-			screen.blit(GameStart , (0,0))       
-			blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
-			
-			
-		if Selectcharatcer:				 
-			allset = 0
-			selected = []
-                	if event.type == pygame.MOUSEBUTTONDOWN:
-				while allset < 4:
-					if ce_rect.collidepoint(event.pos):
-						selected.append('土木')
-						allset+=1
-					if me_rect.collidepoint(event.pos):
-						selected.append('機械')
-						allset+=1
-					if ib_rect.collidepoint(event.pos):
-						selected.append('國企')
-						allset+=1
-					if acct_rect.collidepoint(event.pos):
-						selected.append('會計')
-						allset+=1
-					if econ_rect.collidepoint(event.pos):
-						selected.append('經濟')
-						allset+=1
-					if econ_med.collidepoint(event.pos):
-						selected.append('醫學')
-						allset+=1
-					if econ_phy.collidepoint(event.pos):
-						selected.append('哲學')
-						allset+=1
-					if chi_rect.collidepoint(event.pos):
-						selected.append('中文')
-					if bio_rect.collidepoint(event.pos):
-						selected.append('生科')
-						allset+=1
-					if law_rect.collidepoint(event.pos):
-						selected.append('法律')
-						allset+=1
-				
-			name1 = selected[0]
-			name2 = selected[1]
-			name3 = selected[2]
-			name4 = selected[3]
-				
-			if allset ==4:
-				GameStart = True
+			if not Selectcharacter:
+				for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						sys.exit()		
+					if event.type == pygame.MOUSEBUTTONDOWN:
+						if button_start.collidepoint(event.pos): # 按下按扭
+				                    Selectcharacter = True  
+				screen.blit(GameStart , (0,0))       
+				blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
+			if Selectcharacter:				 
+				allset = 0#當四個腳色都選好，發動遊戲開始
+				selected = []
+        if event.type == pygame.MOUSEBUTTONDOWN:          
+                        if button_player1.collidepoint(event.pos) and allset == 0: # 按下按钮            
+					ismajor = random.randint(0,9)
+					for i in range(len(majorlist)):#where is the majorlist??
+						if i == ismajor:
+						    name1 = majorlist[i]#player1 是誰決定好了!
+						    selected.append(i)#紀錄，避免重複
+						allset += 1
+						blit_alpha(screen,text , 'position', 'color')
+						
+					
+					if button_player2.collidepoint(event.pos) and allset == 1: # 按下按钮            
+					    ismajor = random.randit(0,9)
+						while ismajor in selected:
+							ismajor = random.randit(0,9)
+						
+						for i in range(len(majorlist)):
+							if i==ismajor:
+								name2 = majorlist[i]
+								selected.append(i)
+						allset +=1
+						blit_alpha(screen,text , 'position', 'color')
+					
+					if button_player3.collidepoint(event.pos) and allset == 2: # 按下按钮            
+					    ismajor = random.randit(0,9)
+						while ismajor in selected:
+							ismajor = random.randit(0,9)
+						
+						for i in range(len(majorlist)):
+							if i==ismajor:
+								name3 = majorlist[i]
+								selected.append(i)
+						allset +=1
+						blit_alpha(screen,text , 'position', 'color')
+						
+					if button_player4.collidepoint(event.pos) and allset == 3: # 按下按钮            
+					    ismajor = random.randit(0,9)
+						while ismajor in selected:
+							ismajor = random.randit(0,9)
+						
+						for i in range(len(majorlist)):
+							if i==ismajor:
+								name4 = majorlist[i]
+								selected.append(i)
+						allset +=1
+						blit_alpha(screen,text , 'position', 'color')
+					
+				if allset == 4:
+					GameStart = True
 
-			screen.blit(SelectCharater , (0,0))       
-			blit_alpha(screen,ce_rect , 'position', 'color')
-			blit_alpha(screen,me_rect, 'position', 'color')
-			blit_alpha(screen,ib_rect , 'position', 'color')
-			blit_alpha(screen,acct_rect , 'position', 'color')
-			blit_alpha(screen,econ_rect , 'position', 'color')
-			blit_alpha(screen,med_rect , 'position', 'color')
-			blit_alpha(screen,phy_rect , 'position', 'color')
-			blit_alpha(screen,chi_rect , 'position', 'color')
-			blit_alpha(screen,bio_rect , 'position', 'color')
-			blit_alpha(screen,law_rect , 'position', 'color')
+				screen.blit(SelectCharater , (0,0))       
+				blit_alpha(screen,Plaer1btn , 'position', 'color')
+				blit_alpha(screen,Plaer2btn , 'position', 'color')
+				blit_alpha(screen,Plaer3btn , 'position', 'color')
+				blit_alpha(screen,Plaer3btn , 'position', 'color')
 
-			#等一下要設定
-			#然後也要把每個角色的圖片跟選擇鍵設定好
+				#等一下要設定
+				#然後也要把每個角色的圖片跟選擇鍵設定好
+
         
-
-  
        if gameStarted:#按了
 			screen.blit( backgroud , (0,0) )#切換到遊戲背景圖
 			blit_alpha(screen, bigdice_image, (50, 600), image_alpha)#放骰子
@@ -873,6 +791,6 @@ def main():
     
             
 
-# 双击打开运行            
+# 點兩下檔案就會自動開始執行!            
 if __name__ == "__main__":
     main()           
