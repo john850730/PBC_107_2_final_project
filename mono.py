@@ -118,8 +118,8 @@ class Player():
             self.dice_value =  random.randint(1,6)
         self.position += self.dice_value
 
-        if self.position >= '...': # (...)取決於地圖格數
-            self.position -= '...'
+        if self.position >=24: # (...)取決於地圖格數
+            self.position -= 24
         self.locatedLand = self.judgePosition(lands)
         self.isShowText = True
         return self.eventInPosition(allplayers)
@@ -214,8 +214,8 @@ class Player():
             textLine0 = self.name + '骰出了' + '%d' % self.dice_value + '點！'
             textLine1 = '來到了機會命運之地！'
             self.showText = [textLine0, textLine1, textLine2, textLine3]
-        elif land.name == "":
-            #will do
+        elif land.name == "森林系館" or "女九餐廳" or "送往城中校區":
+            self.movable = False
 	
         else:
             if land.wasBought == False: # 土地未被買時 顯示土地資訊(價格、過路費等等)
@@ -229,9 +229,9 @@ class Player():
 
             elif land.owner == self.name: # 路過自己的土地 蓋城堡
                 if land.islocatedCastle == True:
-                    '''
-                    textline
-                    '''
+                    textline0 = "這是你的"
+		    self.showText = [textLine0]
+		    return True
                 else:
                     textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
                     textLine1 = '來到了自己的'+ self.locatedLand.name + '!'
@@ -276,7 +276,7 @@ class Player():
                     textLine3 = '選擇不攻打會被徵收過路費：%d' % land.payment + '!'
                     self.showText = [textLine0, textLine1, textLine2, textLine3]
                     return 0 # main函數根據0來執行是否攻打城堡
-        elif :
+  
 		
         
 
