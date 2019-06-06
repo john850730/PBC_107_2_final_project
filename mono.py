@@ -398,29 +398,28 @@ def main():
     presentPlayer = player1#由他開始
     
     # 創造地方:  name, price, payment, location, HP, creditLv
-    lita_Land = Land('文學院',2,2,[1,2],3,"low")
-    civ_Land = Land('土木系館',4,3,[3,4],5,"mid")
-    fore_Land = Land('森林系館',0,0,0,[0],"")#停一回合
-    engn_Land = Land('工綜',4,3,[6,7],5,"mid")
+    lita_Land = Land('文學院',2,2,[3],3,"low")
+    civ_Land = Land('土木系館',4,3,[4],5,"mid")
+    fore_Land = Land('森林系館',0,0,0,[5],"")#停一回合
+    engn_Land = Land('工綜',4,3,[6],5,"mid")
     law_Land = Land('霖澤館',4,3,[8],5,"mid")
-    hwoDa_Land = Land('活大',6,2,[9,10],3,"low")
-    library_Land = Land('總圖',6,4,[11,12],7,"high")#
-    sea_Land = Land('工科海',4,3,[13],5,"mid")
-    mDorm_Land = Land('男一舍',2,2,[14],3,"low")
-    fDorm_Land = Land('女九自助餐',0,0,0,[0],"")#停一回合
-    mgmt1_Land = Land('館一',6,4,[0],7,"high")
-    mgmt2_Land = Land('館二',6,4,[0],7,"high")
-    admin_Land = Land('行政大樓',4,3,[0],5,"mid")
-    watermkt_Land = Land('水源市場',6,2,[0],3,"low")
-    chengzhon_Land = Land('送往城中校區',0,0,[0],0,"")#暫停一回合
-    social_Land = Land('社科院',2,4,[0],7,"high")
+    hwoDa_Land = Land('活大',6,2,[10],3,"low")
+    library_Land = Land('總圖',6,4,[11],7,"high")#
+    sea_Land = Land('工科海',4,3,[12],5,"mid")
+    mDorm_Land = Land('男一舍',2,2,[13],3,"low")
+    fDorm_Land = Land('女九自助餐',0,0,0,[15],"")#停一回合
+    mgmt1_Land = Land('館一',6,4,[17],7,"high")
+    mgmt2_Land = Land('館二',6,4,[18],7,"high")
+    admin_Land = Land('行政大樓',4,3,[19],5,"mid")
+    watermkt_Land = Land('水源市場',6,2,[21],3,"low")
+    chengzhon_Land = Land('送往城中校區',0,0,[22],0,"")#暫停一回合
+    social_Land = Land('社科院',2,4,[7],7,"high")
+      
+    oppChance1 = Land('機會命運',0,0,[2],0,0)
+    oppChance2 = Land('機會命運',0,0,[9],0,0)
+    oppChance3 = Land('機會命運',0,0,[14],0,0)
+    oppChance4 = Land('機會命運',0,0,[20],0,0)
     gate_Land = Land('大門',0,0,[0],0,"")#沒事
-    philo_Land = Land('哲學系館',2,2,[0],3,"low")
-    oppChance1 = Land('機會命運',0,0,[0],0,0)
-    oppChance2 = Land('機會命運',0,0,[0],0,0)
-    oppChance3 = Land('機會命運',0,0,[0],0,0)
-    oppChance4 = Land('機會命運',0,0,[0],0,0)
-   
     
     buildings = [gate,fountain,path,library,classroomNine,\
                  classroomTen,resOne,resThree,resTwo,kongdi1,kongdi2]
