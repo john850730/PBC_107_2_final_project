@@ -362,7 +362,7 @@ def main():
 		   '醫學':imagePlayer5, '哲學':imagePlayer6, '中文':imagePlayer7, '生科':imagePlayer8, '法律':imagePlayer9}#dictionary of images of players, keys = "name"
 
     
-    # 各种Surface的rect 
+    # 各種surface的rect
     bigdice_rect = bigdice_image.get_rect()
     bigdice_rect.left , bigdice_rect.top = 50 , 600
     yes_rect = yes.get_rect()
@@ -372,7 +372,9 @@ def main():
     button_rect = StartGameButton.get_rect()
     button_rect.left , button_rect.top = 1003,30
     turnover_rect = turnover.get_rect()
-    turnover_rect.left , turnover_rect.top = 1035,613
+    turnover_rect.left , turnover_rect.top = 1035,61
+
+			      
     
     # 創造玩家
     allplayers = []#共四個角色
@@ -467,85 +469,83 @@ def main():
     # 播放背景音樂
     pygame.mixer.music.play(100)
     
-########################################进入游戏循环！###############################################    
-
-
-   # 循環開始！ 
+########################################进入游戏循环！###############################################
+	# 循环开始！ 
     while running:
         if not gameStarted:
-			if not Selectcharacter:
-				for event in pygame.event.get():
-					if event.type == pygame.QUIT:
-						sys.exit()		
-					if event.type == pygame.MOUSEBUTTONDOWN:
-						if button_start.collidepoint(event.pos): # 按下按扭
-				                    Selectcharacter = True  
-				screen.blit(GameStart , (0,0))       
-				blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
-			if Selectcharacter:				 
-				allset = 0#當四個腳色都選好，發動遊戲開始
-				selected = []
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    
-                    if button_player1.collidepoint(event.pos) and allset == 0: # 按下按钮            
-					ismajor = random.randint(0,9)
-					for i in range(len(majorlist)):#where is the majorlist??
-						if i == ismajor:
-						    name1 = majorlist[i]#player1 是誰決定好了!
-						    selected.append(i)#紀錄，避免重複
-						allset += 1
-						blit_alpha(screen,text , 'position', 'color')
-						
-					
-					if button_player2.collidepoint(event.pos) and allset == 1: # 按下按钮            
-					    ismajor = random.randit(0,9)
-						while ismajor in selected:
-							ismajor = random.randit(0,9)
-						
-						for i in range(len(majorlist)):
-							if i==ismajor:
-								name2 = majorlist[i]
-								selected.append(i)
-						allset +=1
-						blit_alpha(screen,text , 'position', 'color')
-					
-					if button_player3.collidepoint(event.pos) and allset == 2: # 按下按钮            
-					    ismajor = random.randit(0,9)
-						while ismajor in selected:
-							ismajor = random.randit(0,9)
-						
-						for i in range(len(majorlist)):
-							if i==ismajor:
-								name3 = majorlist[i]
-								selected.append(i)
-						allset +=1
-						blit_alpha(screen,text , 'position', 'color')
-						
-					if button_player4.collidepoint(event.pos) and allset == 3: # 按下按钮            
-					    ismajor = random.randit(0,9)
-						while ismajor in selected:
-							ismajor = random.randit(0,9)
-						
-						for i in range(len(majorlist)):
-							if i==ismajor:
-								name4 = majorlist[i]
-								selected.append(i)
-						allset +=1
-						blit_alpha(screen,text , 'position', 'color')
-					
-				if allset == 4:
-					GameStart = True
+		if not Selectcharatcer
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					sys.exit()
+							
+				if event.type == pygame.MOUSEBUTTONDOWN:
+						 
+					if button_start.collidepoint(event.pos): # 按下按钮                    
+						Selectcharatcer = True  
+			screen.blit(GameStart , (0,0))       
+			blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
+			
+			
+		if Selectcharatcer:				 
+			allset = 0
+			selected = []
+                	if event.type == pygame.MOUSEBUTTONDOWN:
+				while allset < 4:
+					if ce_rect.collidepoint(event.pos):
+						selected.append('土木')
+						allset+=1
+					if me_rect.collidepoint(event.pos):
+						selected.append('機械')
+						allset+=1
+					if ib_rect.collidepoint(event.pos):
+						selected.append('國企')
+						allset+=1
+					if acct_rect.collidepoint(event.pos):
+						selected.append('會計')
+						allset+=1
+					if econ_rect.collidepoint(event.pos):
+						selected.append('經濟')
+						allset+=1
+					if econ_med.collidepoint(event.pos):
+						selected.append('醫學')
+						allset+=1
+					if econ_phy.collidepoint(event.pos):
+						selected.append('哲學')
+						allset+=1
+					if chi_rect.collidepoint(event.pos):
+						selected.append('中文')
+					if bio_rect.collidepoint(event.pos):
+						selected.append('生科')
+						allset+=1
+					if law_rect.collidepoint(event.pos):
+						selected.append('法律')
+						allset+=1
+				
+			name1 = selected[0]
+			name2 = selected[1]
+			name3 = selected[2]
+			name4 = selected[3]
+				
+			if allset ==4:
+				GameStart = True
 
-				screen.blit(SelectCharater , (0,0))       
-				blit_alpha(screen,Plaer1btn , 'position', 'color')
-				blit_alpha(screen,Plaer2btn , 'position', 'color')
-				blit_alpha(screen,Plaer3btn , 'position', 'color')
-				blit_alpha(screen,Plaer3btn , 'position', 'color')
+			screen.blit(SelectCharater , (0,0))       
+			blit_alpha(screen,ce_rect , 'position', 'color')
+			blit_alpha(screen,me_rect, 'position', 'color')
+			blit_alpha(screen,ib_rect , 'position', 'color')
+			blit_alpha(screen,acct_rect , 'position', 'color')
+			blit_alpha(screen,econ_rect , 'position', 'color')
+			blit_alpha(screen,med_rect , 'position', 'color')
+			blit_alpha(screen,phy_rect , 'position', 'color')
+			blit_alpha(screen,chi_rect , 'position', 'color')
+			blit_alpha(screen,bio_rect , 'position', 'color')
+			blit_alpha(screen,law_rect , 'position', 'color')
 
-				#等一下要設定
-				#然後也要把每個角色的圖片跟選擇鍵設定好
-
+			#等一下要設定
+			#然後也要把每個角色的圖片跟選擇鍵設定好
         
+
+  
        if gameStarted:#按了
 			screen.blit( backgroud , (0,0) )#切換到遊戲背景圖
 			blit_alpha(screen, bigdice_image, (50, 600), image_alpha)#放骰子
