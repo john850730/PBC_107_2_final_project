@@ -9,28 +9,28 @@ import random
 import sys
 
 # 腳色技能dict
-characters_dict = {'工學院': {'土木': {'credit': 140, 'attack': 4, 'ActiveAbility': None, 'PassiveAbility': '收回扣', 'definition': '買完土地、或建蓋城堡後，可以回收10%消耗的錢幣'}, \
-    '機械': {'credit': 140, 'attack': 4, 'ActiveAbility': '工具人', 'PassiveAbility': None, 'definition': '蓋城堡時可直接升級城堡血量10點'}}, \
-    '管理學院': {'國企': {'credit': 129, 'attack': 4, 'ActiveAbility': 'elite光環', 'PassiveAbility': None, 'definition': '遊戲介面上的角色發出光芒一下下'}, \
-        '會計': {'credit': 133, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '四萬保底3萬8', 'definition': '每回合自動獲得2錢幣'}}, \
-        '社科院': {'經濟': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '一隻看不見的手', 'definition': '土地被其他玩家踩到時，可偷取對方10%的錢幣'}}, \
-            '醫學院': {'醫學': {'credit': 229, 'attack': 5, 'ActiveAbility': '妙手回春', 'PassiveAbility': None, 'definition': '在該角色回合開始時，可選擇是否使用妙手回春，選擇任一擁有的一棟建築，回覆該建築物至滿血狀態(每場遊戲只能使用一次)'}}, \
-                '文學院': {'哲學': {'credit': 128, 'attack': 3, 'ActiveAbility': '你轉系了嗎', 'PassiveAbility': '我唯一知道的，就是我什麼都不知道', 'definition': '擲骰子的點數翻倍'}, \
-                    '中文': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '讀書人的事...怎麼能算偷呢', 'definition': '對方玩家經過我土地(含城堡)時，除了收取過路費外，還可以偷取對方1錢幣'}}, \
-                    '生命科學院': {'生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ', 'definition': '對方玩家攻擊該玩家的土地或城堡，每次只會受到2點傷害'}}, \
-                        '法律學院':{'法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉', 'definition': '法律系所持有城堡被打下時，扣除打下者10%的錢幣'}}}
+characters_dict = {'土木': {'credit': 140, 'attack': 4, 'ActiveAbility': None, 'PassiveAbility': '收回扣', 'definition': '買完土地、或建蓋城堡後，可以回收10%消耗的錢幣'}, \
+    '機械': {'credit': 140, 'attack': 4, 'ActiveAbility': '工具人', 'PassiveAbility': None, 'definition': '蓋城堡時可直接升級城堡血量10點'}, \
+    '國企': {'credit': 129, 'attack': 4, 'ActiveAbility': 'elite光環', 'PassiveAbility': None, 'definition': '遊戲介面上的角色發出光芒一下下'}, \
+        '會計': {'credit': 133, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '四萬保底3萬8', 'definition': '每回合自動獲得2錢幣'}, \
+        '經濟': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '一隻看不見的手', 'definition': '土地被其他玩家踩到時，可偷取對方10%的錢幣'}, \
+            '醫學': {'credit': 229, 'attack': 5, 'ActiveAbility': '妙手回春', 'PassiveAbility': None, 'definition': '在該角色回合開始時，可選擇是否使用妙手回春，選擇任一擁有的一棟建築，回覆該建築物至滿血狀態(每場遊戲只能使用一次)'}}, \
+                '哲學': {'credit': 128, 'attack': 3, 'ActiveAbility': '你轉系了嗎', 'PassiveAbility': '我唯一知道的，就是我什麼都不知道', 'definition': '擲骰子的點數翻倍'}, \
+                    '中文': {'credit': 128, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '讀書人的事...怎麼能算偷呢', 'definition': '對方玩家經過我土地(含城堡)時，除了收取過路費外，還可以偷取對方1錢幣'}, \
+                    '生科': {'credit': 128, 'attack': 2, 'ActiveAbility': None, 'PassiveAbility': '一日生科，終生ㄎㄎ', 'definition': '對方玩家攻擊該玩家的土地或城堡，每次只會受到2點傷害'}, \
+                        '法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉', 'definition': '法律系所持有城堡被打下時，扣除打下者10%的錢幣'}}
 
 class Player():
-    def __init__(self, image, name):
+    def __init__(self, image, name, graduationCredit, attack, ActiveAbility, PassiveAbility, definition):
         self.name = name                    # 角色(科系)
         self.money = 10                     # 星星數
         self.credit = 0                     # 目前學分數
-        self.graduationCredit = '...'       # 畢業學分數(取決於角色)
-        self.attack = '...'                 # 攻擊力(取決於角色)
+        self.graduationCredit = graduationCredit           # 畢業學分數(取決於角色)
+        self.attack = attack                    # 攻擊力(取決於角色)
         self.creditable = True              # 每回合結束可否拿學分
         self.isActive = False               # 是否有主動技能
-        self.ActiveAbility = None           # 主動技能名稱
-        self.PassiveAbility = None          # 被動技能名稱
+        self.ActiveAbility = ActiveAbility           # 主動技能名稱
+        self.PassiveAbility = PassiveAbility   # 被動技能名稱
         self.isGoingToMove = False 
         self.movable = True                 # 每回合是否可移動
         self.image = image
@@ -41,6 +41,7 @@ class Player():
         self.showText = []                
         self.ownedLands = []                # 總共持有的土地
         self.isShowText = False
+        self.definition = definition
         # 每回合一些變數要重新用回初始值，因過程可能改變，像是movable，creditable
     
 
