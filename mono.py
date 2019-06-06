@@ -463,6 +463,7 @@ def main():
     selectcharacter = False
     showButton2 = False
     selected = []#選角的時候用
+    
     # 播放背景音樂
     pygame.mixer.music.play(100)
     
@@ -737,7 +738,7 @@ def main():
             
                     
                     
-            # 放置玩家与电脑的位置 如果重合则挪位
+            # 放置玩家位置，若兩個玩家到同一個地方，自動將一個玩家挪動位置。
             for each in players:
                 for every in computers:
                     if each.position == every.position:
@@ -761,17 +762,21 @@ def main():
                 
             
             
-            # 输赢判断
+            # 輸贏判斷，遊戲結束
             for each in allplayers:
-                if each.money <= 0:
-                    font = pygame.font.Font('resource\\font\\myfont.ttf',200)
-                    loseText = font.render(each.name +'输了！', True, red)
+            font = pygame.font.Font('resource\\font\\myfont.ttf',200)
+                if each.credit == each.graduationCredit:
+                    winText = font.render(each.name +'成功畢業了!!', True, red)
                     screen.fill(black)
-                    screen.blit(loseText,(100,100))
+                    screen.blit(winText,(100,100))
                     font = pygame.font.Font('resource\\font\\myfont.ttf',30)            
                     pygame.time.delay(3000)
+		
+		    
+												   
+												   
                         
-        # 画面运行
+        # 畫面執行
         
         pygame.display.flip()
         clock.tick(60)              # 刷新率
