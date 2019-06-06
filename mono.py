@@ -373,8 +373,26 @@ def main():
     button_rect.left , button_rect.top = 1003,30
     turnover_rect = turnover.get_rect()
     turnover_rect.left , turnover_rect.top = 1035,61
-
-			      
+    ce_rect  = imagePlayers{'土木'}.getrect()
+    ce_rect.left , ce_rect.top = 1003,30
+    me_rect  = imagePlayers{'機械'}.getrect()
+    me_rect.left , me_rect.top = 1003,30      
+    ib_rect  = imagePlayers{'國企'}.getrect()
+    ib_rect.left , ib_rect.top = 1003,30
+    acct_rect = imagePlayers{'會計'}.getrect()
+    acct_rect.left , acct_rect.top = 1003,30 
+    econ_rect  = imagePlayers{'經濟'}.getrect()
+    econ_rect.left , econ_rect.top = 1003,30  
+    med_rect  = imagePlayers{'醫學'}.getrect()
+    med_rect.left , med_rect.top = 1003,30
+    phy_rect  = imagePlayers{'哲學'}.getrect()
+    phy_rect.left , phy_rect.top = 1003,30  
+    chi_rect  = imagePlayers{'中文'}.getrect()
+    chi_rect.left , chi_rect.top = 1003,30
+    bio_rect  = imagePlayers{'生科'}.getrect()
+    bio_rect.left , bio_rect.top = 1003,30
+    law_rect  = imagePlayers{'法律'}.getrect()
+    law_rect.left , law_rect.top = 1003,30
     
     # 創造玩家
     allplayers = []#共四個角色
