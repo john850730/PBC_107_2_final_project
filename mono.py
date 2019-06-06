@@ -18,16 +18,16 @@ characters_dict = {'工學院': {'土木': {'credit': 140, 'attack': 4, 'ActiveA
                         '法律學院':{'法律': {'credit': 130, 'attack': 3, 'ActiveAbility': None, 'PassiveAbility': '這我一定吉'}}}
 
 class Player():
-    def __init__(self, image, name):
+    def __init__(self, image, name, graduationCredit, attack, ActiveAbility, PassiveAbility, definition):
         self.name = name                    # 角色(科系)
         self.money = 10                     # 星星數
         self.credit = 0                     # 目前學分數
-        self.graduationCredit = '...'       # 畢業學分數(取決於角色)
-        self.attack = '...'                 # 攻擊力(取決於角色)
+        self.graduationCredit = graduationCredit       # 畢業學分數(取決於角色)
+        self.attack = attack                 # 攻擊力(取決於角色)
         self.creditable = True              # 每回合結束可否拿學分
         self.isActive = False               # 是否有主動技能
-        self.ActiveAbility = None           # 主動技能名稱
-        self.PassiveAbility = None          # 被動技能名稱
+        self.ActiveAbility = ActiveAbility           # 主動技能名稱
+        self.PassiveAbility = PassiveAbility          # 被動技能名稱
         self.isGoingToMove = False 
         self.movable = True                 # 每回合是否可移動
         self.image = image
@@ -38,6 +38,7 @@ class Player():
         self.showText = []                
         self.ownedLands = []                # 總共持有的土地
         self.isShowText = False
+	self.definition = definition
         # 每回合一些變數要重新用回初始值，因過程可能改變，像是movable，creditable
     
 
