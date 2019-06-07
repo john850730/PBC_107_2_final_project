@@ -326,6 +326,7 @@ def main():
     white = (255,255,255)
     black = (0,0,0)
     red = (255,0,0)
+    green= (0,255,0)
     blue = (0,0,255)
     #font = pygame.font.Font('''''''')
     
@@ -579,7 +580,7 @@ def main():
 														   , True, red)
 							elif each.owner == allplayers[1]:
 								text = font.render('%d' % (each.HP)\
-														   , True, white)
+														   , True, green)
 							
 							elif each.owner == allplayers[2]:
 								text = font.render('%d' % (each.HP)\
@@ -599,7 +600,7 @@ def main():
 														   , True, red)
 								elif each.owner == allplayers[1]:
 									text = font.render('%d' % (each.HP)\
-														   , True, white)
+														   , True, green)
 							
 								elif each.owner == allplayers[2]:
 									text = font.render('%d' % (each.HP)\
