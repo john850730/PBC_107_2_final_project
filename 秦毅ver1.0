@@ -509,7 +509,7 @@ def main():
     pressYes = False
     whetherYes_NoJudge = False
     gameStarted = False
-    selectcharacter = False
+    selectCharacter = False
     showButton2 = False
     selected = []#選角的時候用
     Medic_Skills_counter = 0#判斷醫學系技能剩下次數
@@ -524,7 +524,7 @@ def main():
    # 循環開始！ 
     while running:
         if not gameStarted:
-            if not Selectcharatcer:
+            if not selectCharacter:
                for event in pygame.event.get():
                    if event.type == pygame.QUIT:
                        sys.exit()
@@ -532,12 +532,12 @@ def main():
                    if event.type == pygame.MOUSEBUTTONDOWN:
 						 
                        if button_start.collidepoint(event.pos): # 按下按钮                    
-                           Selectcharatcer = True  
+                           SelectCharacter = True  
             screen.blit(GameStart , (0,0))       
             blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
 			
 		#進入選角頁面	
-        if Selectcharatcer:				 
+        if selectCharacter:				 
             allset = 0
             selected = []
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -581,7 +581,7 @@ def main():
                 gameStarted = True
             
             #選角介面設定
-            screen.blit(SelectCharater , (0,0))       
+            screen.blit(selectCharacter , (0,0))#不是很確定selectCharacter?       
             blit_alpha(screen,ce_rect , 'position', 'color')
             blit_alpha(screen,me_rect, 'position', 'color')
             blit_alpha(screen,ib_rect , 'position', 'color')
