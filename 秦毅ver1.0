@@ -598,15 +598,15 @@ def main():
         if gameStarted:#角色選好後，會變成true
             screen.blit( backgroud , (0,0) )#切換到遊戲背景圖
             blit_alpha(screen, bigdice_image, (50, 600), image_alpha)#放骰子		
-            textPosition = [MapMessageBoxPosition[0],MapMessageBoxPosition[1]]#放訊息box
+            textPosition = [MapMessageBoxPosition[0],MapMessageBoxPosition[1]]#放訊息box 沒blit??
 			
-			#印出訊息
-            for each in presentPlayer.showText:
-                text = font.render(each, True, white, textColorInMessageBox)
+	    #印出訊息: ??
+            for each in presentPlayer.showText:#?! what is the text??
+                text = font.render(each, True, black, textColorInMessageBox)
                 screen.blit(text,textPosition)
                 textPosition[1] += 30
 			
-			#在每一個地點上，印出血量
+	    #在每一個地點上，印出血量
             for i in range(1,3):#1,3要看總共幾個建築，3是機會命運牌
                 for each in buildings:
                     for every in each.location:
@@ -622,7 +622,8 @@ def main():
 							elif each.owner == allplayers[3].name:
 								text = font.render('%d' % (each.HP)\
 														   , True, blue)
-							
+							else:#無主地
+								text = font.render('%d'% (each.HP),True, white)							
 							screen.blit(text,MapChessPosition_Payment[i])
 					
 			for i in range(4, 9):#9是機會卡
@@ -641,7 +642,8 @@ def main():
 														   , True, black)
 							elif each.owner == allplayers[3].name:
 								text = font.render('%d' % (each.HP)\
-														   , True, blue)
+							else:#無主地
+								text = font.render('%d'% (each.HP),True, white)														   , True, blue)
 							screen.blit(text,MapChessPosition_Payment[i]) 
 				        
 			for i in range(10, 15):#15是機會卡
@@ -660,7 +662,8 @@ def main():
 														   , True, black)
 							elif each.owner == allplayers[3]:
 								text = font.render('%d' % (each.HP)\
-														   , True, blue)
+							else:#無主地
+								text = font.render('%d'% (each.HP),True, white)														   , True, blue)
 							screen.blit(text,MapChessPosition_Payment[i]) 
 					
 			for i in range(16,  22):#16為機會卡
@@ -679,7 +682,8 @@ def main():
 														 , True, black)
 							elif each.owner == allplayers[3]:
 								text = font.render('%d' % (each.HP)\
-														   , True, blue)
+							else:#無主地
+								text = font.render('%d'% (each.HP),True, white)														   , True, blue)
 							screen.blit(text,MapChessPosition_Payment[i]) 
 					    
 		    for i in range(23,24): #24為原點
@@ -699,6 +703,8 @@ def main():
 							elif each.owner == allplayers[3]:
 								text = font.render('%d' % (each.HP)\
 														   , True, blue)
+							else:#無主地
+								text = font.render('%d'% (each.HP),True, white)
 							screen.blit(text,MapChessPosition_Payment[i]
 				
 			#公佈欄:
@@ -711,7 +717,7 @@ def main():
 			M_4 = font.render(player4.name +'Money：%d' % player4.money, True, black, white)
 			C_4 = font.render(player4.name +'Credits：%d/%d' % (player4.credit,player4.graduationCredit), True, black, white)
 			
-			screen.blit(M_1,(0,0))
+			screen.blit(M_1,(0,0))#還不知道怎麼設定位置!!
 			screen.blit(C_1,(0,50))
 			screen.blit(M_2,(0,100))
 			screen.blit(C_2,(0,150))
@@ -720,41 +726,41 @@ def main():
 			screen.blit(M_4,(0,300))
 			screen.blit(C_4,(0,400))
 			
+			#技能欄，先等公布欄確定怎麼弄再如法炮製
+			text0 = font.render("你的技能是:%s"% presentPlayer.PassiveAbility,True, black, white)
+			screen.blit(text0,(500,500))#地點亂設			
 			# 放置扔出来的骰子
 			if player_1.dice_value != 0 and showdice:
 				screen.blit(dices[player_1.dice_value - 1],(70,450))        
 					
-			# 放置回合结束按钮
+			# 放置回合结束button
 			if showButton2:
 				screen.blit(turnover2,TurnOvwrButtonPosition)
 			else:
 				screen.blit(turnover,TurnOvwrButtonPosition)
 					
-			# 放置是否按钮
+			# 放置是否button
 			if showYes_No == True:
 				screen.blit(yes , YesNoMessageBoxPosition[0])
 				screen.blit(no  , YesNoMessageBoxPosition[1])
-						
-				
-				
-				
-			#處理按叉叉的事件
+
+			#開始蒐集各種觸發事件
 			for event in pygame.event.get():
-				if event.type == pygame.Quit():
+				if event.type == pygame.Quit():#按螢幕右上角叉叉
 					sys.exit()
 			
-			#四個玩家要輪流玩，要判斷是換誰    
-			if event.type == pygame.MOUSEBUTTONDOWN:
-				if bigdice_rect.collidepoint(event.pos):
-					presentPlayer = allplayers[playerCount]
-					if presentPlayer.movable:
-						pygame.time.delay(2000)#故意停一下，假裝骰子在動
-						if presentPlayer.name == "哲學":
-						    if presentPlayer.credit >= 50:
+			#四個玩家要輪流玩，第一位是player1已初始化，但是接下來要判斷!    
+				if event.type == pygame.MOUSEBUTTONDOWN:
+					if bigdice_rect.collidepoint(event.pos):#怪怪的，應該是按下next turn 才判斷?
+						presentPlayer = allplayers[playerCount]
+						if presentPlayer.movable:#有時候會被設為False
+							pygame.time.delay(2000)#故意停一下，假裝骰子在動
+							if presentPlayer.name == "哲學":
+						    		if presentPlayer.credit >= 50:
 							#主動技能
-							textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
-							textline1 = '選擇轉系必須付出30%的學分!警告: 轉系是隨機事件!'
-							presentPlayer.showText = [textline0, textline1]
+								textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
+								textline1 = '選擇轉系必須付出30%的學分!警告: 轉系是隨機事件!'
+								presentPlayer.showText = [textline0, textline1]
 							
 							whetheryesnojudge = True
 							showYes_No = True
@@ -782,39 +788,41 @@ def main():
 							showYes_No = presentPlayer.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
 							whetherYes_NoJudge = showYes_No
 												   
-					if presentPlayer.name == "醫學":
-						if Medic_Skills_counter < 2:
-							if len(presentPlayer.ownedLands) == 1 and presentPlayer.ownedLands[0].hp < presentPlayer.ownedLands[0].temp_hp:
-							   textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
-							   textline1 = '是否使用妙手回春？注意！ 妙手回春有使用限制'
-							   presentPlayer.showText = [textline0, textline1]
-							   whetheryesnojudge = True
-							   showYes_No = True
-							   if pressYes == True:	
-							       presentPlayer.ownedLands[0].hp = presentPlayer.ownedLands[0].temp_hp
-							       Medic_Skills_counter += 1
-							       texline3 = '你/妳受損的建築已回復'	
-							       presentPlayer.showText = [textline3]					   
-							if len(presentPlayer.ownedLands) > 1:
-							    for i in range(len(presentPlayer.owendLands)):
-							        if presentPlayer.owendLands[i].hp < presentPlayer.ownedLands[i].hp:
+							if presentPlayer.name == "醫學":
+								if Medic_Skills_counter < 2:
+									if len(presentPlayer.ownedLands) == 1 and presentPlayer.ownedLands[0].hp < presentPlayer.ownedLands[0].temp_hp:
+							   		textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
+							   		textline1 = '是否使用妙手回春？注意！ 妙手回春有使用限制'
+							   		presentPlayer.showText = [textline0, textline1]
+							   		whetheryesnojudge = True
+							   		showYes_No = True
+							   		if pressYes == True:	
+							       			presentPlayer.ownedLands[0].hp = presentPlayer.ownedLands[0].temp_hp
+							       			Medic_Skills_counter += 1
+							       			textline3 = '你/妳受損的建築已回復'	
+							       			presentPlayer.showText = [textline3]					   
+								if len(presentPlayer.ownedLands) > 1:
+							    		for i in range(len(presentPlayer.owendLands)):
+							        if presentPlayer.ownedLands[i].HP < presentPlayer.ownedLands[i].temp_HP:
 								   Medic_harmed_buildings.append(i)				   
-                                                            if len(Medic_harmed_buildings) > 0:
-							       textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
-							       textline1 = '是否使用妙手回春？注意！ 妙手回春有使用限制'
-							       presentPlayer.showText = [textline0, textline1]
-							       whetheryesnojudge = True
-							       showYes_No = True
-							       if pressYes == True:	
-								        which_to_heal = random.randit(0,24)
-								        while which_to_heal not in  Medic_harmed_buildings:
-								            which_to_heal = random.randit(0,24)
-								        presentPlayer.ownedLands[which_to_heal].hp = presentPlayer.ownedLands[which_to_heal].temp_hp
-							            Medic_Skills_counter += 1
-								    texline3 = '你/妳受損的建築已回復'	
-							            presentPlayer.showText = [textline3]
-						for each in presentPlayer.showText:
-						    text = font.render(each, True, white, textColorInMessageBox)
+                                                            	if len(Medic_harmed_buildings) > 0:
+									textline0 = '此角色有主動技能為【%s】' % presentPlayer.ActiveAbility
+							       		textline1 = '是否使用妙手回春？注意！ 妙手回春有使用限制'
+							       		presentPlayer.showText = [textline0, textline1]
+							       		whetheryesnojudge = True
+							       		showYes_No = True
+							       		if pressYes == True:	
+								        	which_to_heal = random.randit(0,24)
+								        	while which_to_heal not in  Medic_harmed_buildings:
+								            	which_to_heal = random.randit(0,24)
+								        	presentPlayer.ownedLands[which_to_heal].hp = presentPlayer.ownedLands[which_to_heal].temp_hp
+							            	Medic_Skills_counter += 1
+								    	textline3 = '你/妳受損的建築已回復'	
+							            	presentPlayer.showText = [textline3]
+						
+						
+						for each in presentPlayer.showText:#都到這裡才印太晚了，前面就該開始印了，可以做成fcn?
+						    	text = font.render(each, True, white, textColorInMessageBox)
 							screen.blit(text,textPosition)
 							textPosition[1] += 30
 							showYes_No = presentPlayer.move(buildings,allplayers)#這一步會丟骰子，並移動地點，並觸發到達目的地後會發生的事件。
@@ -829,15 +837,15 @@ def main():
 							
 					else:
 						 continue#回去看
-				#按回合結束鍵     
+				#按回合結束鍵，更新presentPlayer是誰     
 				if turnover_rect.collidepoint(event.pos): 
-					showButton2 = True#YesNo按鍵True則會出現!
+					showButton2 = True #what is this??
 					playerCount += 1
 					if playerCount == 4:
 						playerCount -= 4  
 								  
 				else:#什麼都沒按
-					showButton2 = False#YesNo按鍵不會出現   
+					showButton2 = False #what is this  
 			
 			if whetherYes_NoJudge == True:#是否有效 
 				if yes_rect.collidepoint(event.pos): # 按Yes
@@ -846,7 +854,7 @@ def main():
 				if no_rect.collidepoint(event.pos): # 按No
 					showNo2  = True
 		  
-			if event.type == pygame.MOUSEBUTTONUP:#Up vs down?!
+			if event.type == pygame.MOUSEBUTTONUP:#按完之後，發生的事
 							
 				if turnover_rect.collidepoint(event.pos): # 按回合结束
 					showButton2 = False
@@ -871,12 +879,13 @@ def main():
 					showYes_No = presentPlayer.move(buildings,allplayers)
 					whetherYes_NoJudge = showYes_No
 					
-			if presentPlayer.buyaBuilding(pressYes) == True:
+			if presentPlayer.isBuyingLand(pressYes) == True:#不懂這裡的功能
 						pressYes = False
 						
-					if presentPlayer.addaHouse(pressYes) == True:
+			if presentPlayer.isBuildingCastle(pressYes) == True:
 						pressYes = False
-				
+			if presentPlayer.isAttacking(pressYes) == True:
+						pressYes = False
 			 ##########################################################
 		 
                     
@@ -916,6 +925,10 @@ def main():
                     screen.blit(winText,(100,100))
                     font = pygame.font.Font('resource\\font\\myfont.ttf',30)            
                     pygame.time.delay(3000)
+		if each.money < 0:
+			loseText = font.render(each.name +'有錢才能念書!!', True, red)
+			
+		
 		
 		    
 												   
