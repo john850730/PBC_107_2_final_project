@@ -515,8 +515,8 @@ def main():
     Medic_Skills_counter = 0#判斷醫學系技能剩下次數
     Medic_harmed_buildings = []		#判斷醫學系受損建築
     
-    # 播放背景音樂
-    pygame.mixer.music.play(100)
+    # 播放背景音樂(暫無)
+    # pygame.mixer.music.play(100)
     
 ########################################遊戲循環開始！###############################################    
 
