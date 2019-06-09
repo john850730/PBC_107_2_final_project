@@ -359,7 +359,7 @@ class Land():
 
 
 # 讓東西透明度可以調整，網路上的
-def blit_alpha(target, source, location, opacity):
+def blit_alpha(target, source, location, opacity):#source一定要是個圖檔!!不可以是按鍵!
     x = location[0]
     y = location[1]
     temp = pygame.Surface((source.get_width(), source.get_height())).convert()
@@ -597,126 +597,85 @@ def main():
                 if event.type == pygame.QUIT:
                     sys.exit()
 				
-                if event.type == pygame.MOUSEMOTION:
-                    if button_rect.collidepoint(event.pos):
-                        button_alpha = 255   
+                if event.type == pygame.MOUSEMOTION:#如果滑鼠有晃到
+                    if button_rect.collidepoint(event.pos):#這一個矩形內
+                        button_alpha = 255#變暗   
                     else:
-                        button_alpha = 120 
+                        button_alpha = 120#變亮 
 
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if button_rect.collidepoint(event.pos): # 按下按钮                    
-                        selectCharacter = True
-                        gameStarted = True
-            screen.blit(GameStart, (0,0))       
-            blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
+                if event.type == pygame.MOUSEBUTTONDOWN:#如果有暗下按鈕
+                    if button_rect.collidepoint(event.pos): # 且是點在個矩形內                    
+                        selectCharacter = True#始可已進入下一個if selectCharacter block
+                        gameStarted = True#不再進入if not gameStarted的block
+            screen.blit(GameStart, (0,0))#印出底圖一       
+            blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)#放上start game按鍵，且會改變亮度!
 			
 		# 進入選角頁面	
         if selectCharacter:
             # 選角介面設定
-            screen.blit(character_selection, (0,0)) 
-            button_alpha = 255
-            blit_alpha(screen, imagePlayers['機械'], (42, 150), button_alpha)
-            blit_alpha(screen, imagePlayers['土木'], (292, 150), button_alpha)
-            blit_alpha(screen, imagePlayers['國企'], (542, 150), button_alpha)
-            blit_alpha(screen, imagePlayers['會計'], (792, 150), button_alpha)
-            blit_alpha(screen, imagePlayers['經濟'], (1037, 150), button_alpha)
-            blit_alpha(screen, imagePlayers['醫學'], (42, 420), button_alpha)
-            blit_alpha(screen, imagePlayers['哲學'], (292, 420), button_alpha)
-            blit_alpha(screen, imagePlayers['中文'], (542, 420), button_alpha)
-            blit_alpha(screen, imagePlayers['生科'], (792, 420), button_alpha)
-            blit_alpha(screen, imagePlayers['法律'], (1037, 420), button_alpha)
+            screen.blit(character_selection, (0,0))#放上選角底圖 
+            #原本按鈕是比較淺色的，希望按鈕點完後變暗(變255)
+            blit_alpha(screen, imagePlayers['機械'], (42, 150), 180)
+            blit_alpha(screen, imagePlayers['土木'], (292, 150), 180)
+            blit_alpha(screen, imagePlayers['國企'], (542, 150), 180)
+            blit_alpha(screen, imagePlayers['會計'], (792, 150), 180)
+            blit_alpha(screen, imagePlayers['經濟'], (1037, 150),180)
+            blit_alpha(screen, imagePlayers['醫學'], (42, 420), 180)
+            blit_alpha(screen, imagePlayers['哲學'], (292, 420), 180)
+            blit_alpha(screen, imagePlayers['中文'], (542, 420), 180)
+            blit_alpha(screen, imagePlayers['生科'], (792, 420), 180)
+            blit_alpha(screen, imagePlayers['法律'], (1037, 420), 180)
             pygame.display.flip()
             clock.tick(60)
             
+			#選角色(四個)
             allset = 0
             selected = []
             while allset < 4:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         sys.exit()
-                    '''
-                    if event.type == pygame.MOUSEMOTION:
-                        if ce_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if me_rect.collidepoint(event.pos):
-                            button_alpha = 255
-                        else:
-                            button_alpha = 120
-                        if ib_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if acct_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if econ_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if med_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if phy_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if chi_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if bio_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                        if law_rect.collidepoint(event.pos):
-                            button_alpha = 255   
-                        else:
-                            button_alpha = 120
-                    '''
+                    
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if ce_rect.collidepoint(event.pos):
-                            button_alpha = 120                       
+							blit_alpha(screen, imagePlayers['土木'], (292, 150), 255)#如果點了，就會blit一個比較深色的按扭圖按上去                    
                             selected.append('土木')
                             allset += 1
                         if me_rect.collidepoint(event.pos):
-                            button_alpha = 120                           
+							blit_alpha(screen, imagePlayers['機械'], (42, 150), 255)
                             selected.append('機械')
                             allset += 1
                         if ib_rect.collidepoint(event.pos):
-                            button_alpha = 120                           
+                            blit_alpha(screen, imagePlayers['國企'], (542, 150), 255)                           
                             selected.append('國企')
                             allset += 1
                         if acct_rect.collidepoint(event.pos):
-                            button_alpha = 120                           
+                            blit_alpha(screen, imagePlayers['會計'], (792, 150), 255)                           
                             selected.append('會計')
                             allset += 1
                         if econ_rect.collidepoint(event.pos):
-                            button_alpha = 120                           
+                            blit_alpha(screen, imagePlayers['經濟'], (1037, 150),255)                           
                             selected.append('經濟')
                             allset += 1
                         if med_rect.collidepoint(event.pos):
-                            button_alpha = 120                         
+                            blit_alpha(screen, imagePlayers['醫學'], (42, 420), 255)                         
                             selected.append('醫學')
                             allset += 1
                         if phy_rect.collidepoint(event.pos):
-                            button_alpha = 120                          
+                            blit_alpha(screen, imagePlayers['哲學'], (292, 420), 255)                          
                             selected.append('哲學')
                             allset += 1
                         if chi_rect.collidepoint(event.pos):
-                            button_alpha = 120                           
+                            blit_alpha(screen, imagePlayers['中文'], (542, 420), 255)                           
                             selected.append('中文')
                             allset += 1
                         if bio_rect.collidepoint(event.pos):
-                            button_alpha = 120                           
+                            blit_alpha(screen, imagePlayers['生科'], (792, 420), 255)                           
                             selected.append('生科')
                             allset += 1
                         if law_rect.collidepoint(event.pos):
-                            button_alpha = 120                            
+                            blit_alpha(screen, imagePlayers['法律'], (1037, 420), 255)                            
                             selected.append('法律')
                             allset += 1
 
@@ -747,7 +706,7 @@ def main():
 
             presentPlayer = player1 # 由player1開始
 
-            selectCharacter = False
+            selectCharacter = False #不會再進入這一個if block
             
                 		
         if gameStarted and allset == 4: # 角色選好後，會變成true，遊戲開始
@@ -761,6 +720,7 @@ def main():
             M_4 = font.render(player4.name +'Money：%d' % player4.money, True, black, white)
             C_4 = font.render(player4.name +'Credits：%d/%d' % (player4.credit,player4.graduationCredit), True, black, white)
             
+            screen.blit(backgroud, (0,0))			
             screen.blit(M_1, (0,0))
             screen.blit(C_1, (0,50))
             screen.blit(M_2, (0,100))
@@ -769,8 +729,8 @@ def main():
             screen.blit(C_3, (0,250))
             screen.blit(M_4, (0,300))
             screen.blit(C_4, (0,400))
-            screen.blit(backgroud, (0,0))
-            blit_alpha(screen, bigdice_image, (50, 600), image_alpha) # 放骰子		
+
+            blit_alpha(screen, bigdice_image, (1150, 50), image_alpha) # 放骰子  移到右上角		
             textPosition = [MapMessageBoxPosition[0], MapMessageBoxPosition[1]]
             pygame.display.flip()
             clock.tick(60)
