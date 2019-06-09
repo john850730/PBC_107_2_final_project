@@ -23,7 +23,8 @@ characters_dict = \
 
 # 角色物件
 class Player():
-    def __init__(self, image, name, graduationCredit, attack, ActiveAbility, PassiveAbility, definition):
+    def __init__(self, small_image, image, name, graduationCredit, attack, ActiveAbility, PassiveAbility, definition):
+        self.small_image = small_image                 # 遊戲介面的小人像
         self.image = image                             # 角色圖片
         self.name = name                               # 角色(科系)
         self.money = 10                                # 星星數
@@ -454,8 +455,20 @@ def main():
     imagePlayer8 = pygame.transform.scale(imagePlayer8, (250,250))
     imagePlayer9 = pygame.image.load("resource\\pic\\law.png").convert_alpha()
     imagePlayer9 = pygame.transform.scale(imagePlayer9, (250,250))
-    
-    
+    #遊戲開始後的小人像
+    imagePlayer0_small = pygame.transform.scale(imagePlayer0, (50, 30))
+    imagePlayer1_small = pygame.transform.scale(imagePlayer1, (50, 30))
+    imagePlayer2_small = pygame.transform.scale(imagePlayer2, (50, 30))
+    imagePlayer3_small = pygame.transform.scale(imagePlayer3, (50, 30))
+    imagePlayer4_small = pygame.transform.scale(imagePlayer4, (50, 30))
+    imagePlayer5_small = pygame.transform.scale(imagePlayer5, (50, 30))
+    imagePlayer6_small = pygame.transform.scale(imagePlayer6, (50, 30))
+    imagePlayer7_small = pygame.transform.scale(imagePlayer7, (50, 30))
+    imagePlayer8_small = pygame.transform.scale(imagePlayer8, (50, 30))
+    imagePlayer9_small = pygame.transform.scale(imagePlayer9, (50, 30))
+	
+    small_image = {"土木":imagePlayer0_small, "機械":imagePlayer1_small, "國企":imagePlayer2_small, '會計':imagePlayer3_small, '經濟':imagePlayer4_small\
+		   ,'醫學':imagePlayer5_small, '哲學':imagePlayer6_small, '中文':imagePlayer7_small, '生科':imagePlayer8_small, '法律':imagePlayer9_small}
     imagePlayers = {"土木":imagePlayer0, "機械":imagePlayer1, "國企":imagePlayer2, '會計':imagePlayer3, '經濟':imagePlayer4\
 		   ,'醫學':imagePlayer5, '哲學':imagePlayer6, '中文':imagePlayer7, '生科':imagePlayer8, '法律':imagePlayer9}#dictionary of images of players, keys = "name"
 
@@ -540,10 +553,13 @@ def main():
                   (715,104), (617,104), (519,104), (421,104), (323,104),\
                   (225,104), (127,104), (127,200), (127,296)]
     
-    MapChessPosition_Player = []
-    MapChessPosition_Com = []
-    MapChessPosition_Original = []
-    MapChessPosition_Payment = []
+    MapChessPosition_Player1 = []
+    MapChessPosition_Player2 = []
+    MapChessPosition_Player3 = []
+    MapChessPosition_Player4 = []
+    #MapChessPosition_Com = []
+    #MapChessPosition_Original = []
+    #MapChessPosition_Payment = []
     
     
     MapMessageBoxPosition = (280, 350)
@@ -554,10 +570,13 @@ def main():
     
     # 調整位置
     for i in range(0,24):
-        MapChessPosition_Original.append((MapXYvalue[i][0] - 50, MapXYvalue[i][1] - 80))
-        MapChessPosition_Player.append((MapXYvalue[i][0] - 70, MapXYvalue[i][1] - 60))
-        MapChessPosition_Com.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 100))
-        MapChessPosition_Payment.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 15))
+        #MapChessPosition_Original.append((MapXYvalue[i][0] - 50, MapXYvalue[i][1] - 80))
+        MapChessPosition_Player1.append((MapXYvalue[i][0]  , MapXYvalue[i][1] - 40))
+        MapChessPosition_Player2.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1]-40))
+        MapChessPosition_Player3.append((MapXYvalue[i][0] , MapXYvalue[i][1] - 100))
+        MapChessPosition_Player4.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1] - 100))
+        #MapChessPosition_Com.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 100))
+        #MapChessPosition_Payment.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 15))
     
 
     # 循環用      
@@ -705,19 +724,19 @@ def main():
             # 創造玩家
             allplayers = [] # 共四個角色
 
-            player1 = Player(imagePlayers[name1], name1, characters_dict[name1]["credit"], characters_dict[name1]["attack"]\
+            player1 = Player(small_image[name1], imagePlayers[name1], name1, characters_dict[name1]["credit"], characters_dict[name1]["attack"]\
 		    ,characters_dict[name1]["ActiveAbility"], characters_dict[name1]["PassiveAbility"], characters_dict[name1]["definition"])
             allplayers.append(player1)
 
-            player2 = Player(imagePlayers[name2], name2, characters_dict[name2]["credit"], characters_dict[name2]["attack"]\
+            player2 = Player(small_image[name2], imagePlayers[name2], name2, characters_dict[name2]["credit"], characters_dict[name2]["attack"]\
 		    ,characters_dict[name2]["ActiveAbility"], characters_dict[name2]["PassiveAbility"], characters_dict[name1]["definition"])
             allplayers.append(player2)
 
-            player3 = Player(imagePlayers[name3], name3, characters_dict[name3]["credit"], characters_dict[name3]["attack"]\
+            player3 = Player(small_image[name3], imagePlayers[name3], name3, characters_dict[name3]["credit"], characters_dict[name3]["attack"]\
 		    ,characters_dict[name3]["ActiveAbility"], characters_dict[name3]["PassiveAbility"], characters_dict[name1]["definition"])
             allplayers.append(player3)
 
-            player4 = Player(imagePlayers[name4], name4, characters_dict[name4]["credit"], characters_dict[name4]["attack"]\
+            player4 = Player(small_image[name4], imagePlayers[name4], name4, characters_dict[name4]["credit"], characters_dict[name4]["attack"]\
 		    ,characters_dict[name4]["ActiveAbility"], characters_dict[name4]["PassiveAbility"], characters_dict[name1]["definition"])
             allplayers.append(player4)
 
@@ -781,91 +800,7 @@ def main():
                         screen.blit(text2, (coordinate[0], coordinate[1]+50))
 
             landsNameHP(buildings, MapXYvalue)
-
-
-	    # 在每一個地點上，印出血量
-            for i in range(1,3): # 1,3要看總共幾個建築，3是機會命運牌
-                for each in buildings:
-                    every = each.location
-                    if i == every:
-                        if each.owner == allplayers[0].name:
-                            text = font.render('%d' % (each.HP), True, red)
-                        elif each.owner == allplayers[1].name:
-                            text = font.render('%d' % (each.HP), True, yellow)
-                        elif each.owner == allplayers[2].name:
-                            text = font.render('%d' % (each.HP), True, black)
-                        elif each.owner == allplayers[3].name:
-                            text = font.render('%d' % (each.HP), True, blue)
-                        else: # 無主地
-                            text = font.render('%d' % (each.HP), True, green)
-                        screen.blit(text, MapChessPosition_Payment[i])
-            '''
-            for i in range(4, 9): # 9是機會卡
-                for each in buildings:
-                    for every in each.location:
-                        if i == every:
-                            if each.owner == allplayers[0].name:
-                                text = font.render('%d' % (each.HP), True, red)
-                            elif each.owner == allplayers[1].name:
-                                text = font.render('%d' % (each.HP), True, green)
-                            elif each.owner == allplayers[2].name:
-                                text = font.render('%d' % (each.HP), True, black)
-                            elif each.owner == allplayers[3].name:
-                                text = font.render('%d' % (each.HP), True, black)
-                            else: # 無主地
-                                text = font.render('%d'% (each.HP),True, white)
-                            screen.blit(text, MapChessPosition_Payment[i])'''
-            '''
-            for i in range(10, 15): # 15是機會卡
-                for each in buildings:
-                    for every in each.location:
-                        if i == every:
-                            if each.owner == allplayers[0]:
-                                text = font.render('%d' % (each.HP), True, red)
-                            elif each.owner == allplayers[1]:
-                                text = font.render('%d' % (each.HP), True, green)
-                            elif each.owner == allplayers[2]:
-                                text = font.render('%d' % (each.HP), True, black)
-                            elif each.owner == allplayers[3]:
-                                text = font.render('%d' % (each.HP), True, black)
-                            else: # 無主地
-                                text = font.render('%d'% (each.HP), True, white)
-                            screen.blit(text,MapChessPosition_Payment[i])'''
-            '''
-            for i in range(16,  22): # 16為機會卡
-                for each in buildings:
-                    for every in each.location:
-                        if i == every:
-                            if each.owner == allplayers[0]:
-                                text = font.render('%d' % (each.HP), True, red)
-                            elif each.owner == allplayers[1]:
-                                text = font.render('%d' % (each.HP), True, green)
-                            elif each.owner == allplayers[2]:
-                                text = font.render('%d' % (each.HP), True, black)
-                            elif each.owner == allplayers[3]:
-                                text = font.render('%d' % (each.HP), True, black)
-                            else: # 無主地
-                                text = font.render('%d'% (each.HP), True, white)
-                            screen.blit(text,MapChessPosition_Payment[i])'''
-            '''
-            for i in range(23,24): # 24為原點
-                for each in buildings:
-                    for every in each.location:
-                        if i == every:
-                            if each.owner == allplayers[0]:
-                                text = font.render('%d' % (each.HP), True, red)
-                            elif each.owner == allplayers[1]:
-                                text = font.render('%d' % (each.HP), True, green)
-                            elif each.owner == allplayers[2]:
-                                text = font.render('%d' % (each.HP), True, black)
-                            elif each.owner == allplayers[3]:
-                                text = font.render('%d' % (each.HP), True, blue)
-                            else: # 無主地
-                                text = font.render('%d'% (each.HP), True, white)
-                            screen.blit(text,MapChessPosition_Payment[i])'''
-
-            '''       
-					
+	
 			# 放置回合结束button
             if showButton2:
                 screen.blit(turnover2, TurnOvwrButtonPosition)
@@ -883,64 +818,64 @@ def main():
 
 			# 開始蒐集各種觸發事件
             for event in pygame.event.get():
-                presentPlayer.showText = ['現在是%s的回合，請擲骰子!結束你的回合請按【回合結束】'] % presentPlayer.name
+                presentPlayer.showText = ['現在是%s的回合，請擲骰子!結束你的回合請按【回合結束】' % presentPlayer.name]
                 printText(presentPlayer)
                 
-                if event.type == pygame.Quit(): # 按螢幕右上角叉叉
+            if event.type == pygame.QUIT: # 按螢幕右上角叉叉
                     sys.exit()
 
-                if event.type == pygame.MOUSEMOTION:
-                    if bigdice_rect.collidepoint(event.pos):
+            if event.type == pygame.MOUSEMOTION:
+                if bigdice_rect.collidepoint(event.pos):
                         image_alpha = 255   
-                    else:
+                else:
                         image_alpha = 190
 
 			# 四個玩家要輪流玩，第一位是player1已初始化，但是接下來要判斷!
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if bigdice_rect.collidepoint(event.pos):
-                        if presentPlayer.movable == True:
-                            if presentPlayer == player1:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if bigdice_rect.collidepoint(event.pos):
+                    if presentPlayer.movable == True:
+                        if presentPlayer == player1:
                                 pygame.time.delay(2000) # 故意停一下，假裝骰子在動
                                 showYes_No = player1.move(buildings, allplayers)
                                 printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player2
 
-                            elif presentPlayer == player2:
+                        elif presentPlayer == player2:
                                 pygame.time.delay(2000)
                                 showYes_No = player2.move(buildings, allplayers)
                                 printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player3
 
-                            elif presentPlayer == player3:
+                        elif presentPlayer == player3:
                                 pygame.time.delay(2000)
                                 showYes_No = player3.move(buildings, allplayers)
                                 printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player4
 
-                            elif presentPlayer == player4:
+                        elif presentPlayer == player4:
                                 pygame.time.delay(2000)
                                 showYes_No = player4.move(buildings, allplayers)
                                 printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player1
-                        else:
-                            pass
+                    else:
+                        pass
 
-                    if whetherYes_NoJudge == True: 
-                        if yes_rect.collidepoint(event.pos): # 按是
+                if whetherYes_NoJudge == True: 
+                    if yes_rect.collidepoint(event.pos): # 按是
                             showYes2 = True
                             
-                        if no_rect.collidepoint(event.pos): # 按否
+                    if no_rect.collidepoint(event.pos): # 按否
                             showNo2  = True       
 
-                if event.type == pygame.MOUSEBUTTONUP:
-                    if turnover_rect.collidepoint(event.pos): # 按回合结束
+            if event.type == pygame.MOUSEBUTTONUP:
+                if turnover_rect.collidepoint(event.pos): # 按回合结束
                         showButton2 = False
                     
-                    if yes_rect.collidepoint(event.pos): # 按是
+                if yes_rect.collidepoint(event.pos): # 按是
                         showYes2 = False
                         showYes_No = False
                         # 只有在可以判定的时候才能算按下了是 同时将判断条件置为空
@@ -948,7 +883,7 @@ def main():
                             pressYes = True
                             whetherYes_NoJudge = False
                                    
-                    if no_rect.collidepoint(event.pos): # 按否
+                if no_rect.collidepoint(event.pos): # 按否
                         showNo2 = False
                         pressYes = False
                         showYes_No = False              
@@ -969,22 +904,30 @@ def main():
                     showYes_No = presentPlayer.move(buildings,allplayers)
                     whetherYes_NoJudge = showYes_No
 
-                
+            for each in allplayers:
+                if each == allplayers[0]:
+                    screen.blit(each.small_image,MapChessPosition_Player1[each.position])
+                elif each == allplayers[1]:
+                    screen.blit(each.small_image,MapChessPosition_Player2[each.position])
+                elif each == allplayers[2]:
+                    screen.blit(each.small_image,MapChessPosition_Player3[each.position])
+                elif each == allplayers[3]:
+                    screen.blit(each.small_image,MapChessPosition_Player4[each.position])	                
             
             
             # 輸贏判斷，遊戲結束
             for each in allplayers:
-                font = pygame.font.Font('resource\\font\\myfont.ttf', 200)
+                #font = pygame.font.Font('resource\\font\\myfont.ttf', 200)
                 if each.credit == each.graduationCredit:
                     winText = font.render(each.name +'成功畢業了!!', True, red)
                     screen.fill(black)
                     screen.blit(winText,(100,100))
-                    font = pygame.font.Font('resource\\font\\myfont.ttf',30)
+                    #font = pygame.font.Font('resource\\font\\myfont.ttf',30)
                     pygame.time.delay(3000)
             
                 if each.money < 0:
                     loseText = font.render(each.name +'有錢才能念書!!', True, red)				   
-        '''                
+                        
         pygame.display.flip()
         clock.tick(60)
             
