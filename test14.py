@@ -415,13 +415,13 @@ def main():
     dice_6 = pygame.image.load("resource\\pic\\dice_6.png")
     dices = [dice_1,dice_2,dice_3,dice_4,dice_5,dice_6]
     yes = pygame.image.load("resource\\pic\\yes.png")
-    yes = pygame.transform.scale(yes, (100,60))
+    yes = pygame.transform.scale(yes, (80,48))
     yes2 = pygame.image.load("resource\\pic\\yes2.png")
-    yes2 = pygame.transform.scale(yes2, (100,60))
+    yes2 = pygame.transform.scale(yes2, (80,48))
     no = pygame.image.load("resource\\pic\\no.png")
-    no = pygame.transform.scale(no, (100,60))
+    no = pygame.transform.scale(no, (80,48))
     no2 = pygame.image.load("resource\\pic\\no2.png")
-    no2 = pygame.transform.scale(no2, (100,60))
+    no2 = pygame.transform.scale(no2, (80,48))
     GameStart = pygame.image.load("resource\\pic\\GameStart.png")
     GameStart = pygame.transform.scale(GameStart, (1270,768))
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
@@ -476,9 +476,9 @@ def main():
     bigdice_rect = bigdice_image.get_rect()
     bigdice_rect.left , bigdice_rect.top = 50 , 600
     yes_rect = yes.get_rect()
-    yes_rect.left , yes_rect.top = 500,438 
+    yes_rect.left , yes_rect.top = 400,338 
     no_rect = no.get_rect()
-    no_rect.left , no_rect.top =  630,438
+    no_rect.left , no_rect.top =  400,338
     button_rect = StartGameButton.get_rect()
     button_rect.left , button_rect.top = 500,30
     turnover_rect = turnover.get_rect()
@@ -535,22 +535,22 @@ def main():
 	
 	
     
-    buildings = [chengzhon_Land, watermkt_Land, oppChance4, admin_Land, \
+    buildings = [ gate_Land, chengzhon_Land, watermkt_Land, oppChance4, admin_Land, \
                 mgmt1_Land, mgmt2_Land, biosci_Land, geo_Land, fDorm_Land,\
                 oppChance3, mDorm_Land, sea_Land, library_Land, hwoDa_Land,\
                 oppChance2, law_Land, social_Land, engn_Land, fore_Land,\
-                civ_Land, lita_Land, oppChance1, philo_Land, gate_Land]
+                civ_Land, lita_Land, oppChance1, philo_Land]
     
     majorlist = ['土木', '機械', '國企', '會計', '經濟', '醫學', '哲學', '中文', '生科' ,'法律']
 	
     
     
     # 座標數據等一下要改
-    MapXYvalue = [(127,392), (127,485), (127,584), (225,584), (323,584),\
+    MapXYvalue = [(127,296), (127,392), (127,485), (127,584), (225,584), (323,584),\
                   (421,584), (519,584), (617,584), (715,584), (813,584),\
                   (813,485), (813,392), (813,296), (813,200), (813,104),\
                   (715,104), (617,104), (519,104), (421,104), (323,104),\
-                  (225,104), (127,104), (127,200), (127,296)]
+                  (225,104), (127,104), (127,200), ]
     
     MapChessPosition_Player1 = []
     MapChessPosition_Player2 = []
@@ -562,7 +562,7 @@ def main():
     
     
     MapMessageBoxPosition = (280, 400)
-    YesNoMessageBoxPosition = [(250, 345) , (380, 345)]
+    YesNoMessageBoxPosition = [(600, 495) , (700, 495)]
     StartGameButtonPosition = (370, 65)
     TurnOverButtonPosition = (1040, 550)
     
@@ -570,10 +570,10 @@ def main():
     # 調整位置
     for i in range(0,24):
         #MapChessPosition_Original.append((MapXYvalue[i][0] - 50, MapXYvalue[i][1] - 80))
-        MapChessPosition_Player1.append((MapXYvalue[i][0]  , MapXYvalue[i][1] - 40))
-        MapChessPosition_Player2.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1]-40))
-        MapChessPosition_Player3.append((MapXYvalue[i][0] , MapXYvalue[i][1] - 100))
-        MapChessPosition_Player4.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1] - 100))
+        MapChessPosition_Player1.append((MapXYvalue[i][0] - 10  , MapXYvalue[i][1] ))
+        MapChessPosition_Player2.append((MapXYvalue[i][0] + 40, MapXYvalue[i][1]))
+        #MapChessPosition_Player3.append((MapXYvalue[i][0] , MapXYvalue[i][1] - 100))
+        #MapChessPosition_Player4.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1] - 100))
         #MapChessPosition_Com.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 100))
         #MapChessPosition_Payment.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 15))
     
@@ -804,9 +804,9 @@ def main():
                 elif each == allplayers[1]:
                     screen.blit(each.small_image,MapChessPosition_Player2[each.position])
                 #elif each == allplayers[2]:
-                    screen.blit(each.small_image,MapChessPosition_Player3[each.position])
+                    #screen.blit(each.small_image,MapChessPosition_Player3[each.position])
                 #elif each == allplayers[3]:
-                    screen.blit(each.small_image,MapChessPosition_Player4[each.position])
+                    #screen.blit(each.small_image,MapChessPosition_Player4[each.position])
             
             for player in allplayers:   # 每回合更新movable & creditable
                 player.movable = True
@@ -905,21 +905,21 @@ def main():
                                 showYes_No = player2.move(buildings, allplayers)
                                 printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
-                                presentPlayer = player3
-
-                            elif presentPlayer.name == player3.name:
-                                pygame.time.delay(200)
-                                showYes_No = player3.move(buildings, allplayers)
-                                printText(presentPlayer)
-                                whetherYes_NoJudge = showYes_No
-                                presentPlayer = player4
-
-                            elif presentPlayer.name == player4.name:
-                                pygame.time.delay(200)
-                                showYes_No = player4.move(buildings, allplayers)
-                                printText(presentPlayer)
-                                whetherYes_NoJudge = showYes_No
                                 presentPlayer = player1
+
+                            # elif presentPlayer.name == player3.name:
+                                # pygame.time.delay(200)
+                                # showYes_No = player3.move(buildings, allplayers)
+                                # printText(presentPlayer)
+                                # whetherYes_NoJudge = showYes_No
+                                # presentPlayer = player4
+
+                            # elif presentPlayer.name == player4.name:
+                                # pygame.time.delay(200)
+                                # showYes_No = player4.move(buildings, allplayers)
+                                # printText(presentPlayer)
+                                # whetherYes_NoJudge = showYes_No
+                                # presentPlayer = player1
                         else:
                             if presentPlayer.name == player1.name:
                                 presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
@@ -929,17 +929,17 @@ def main():
                             elif presentPlayer.name == player2.name:
                                 presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
                                 printText(presentPlayer)
-                                presentPlayer = player3
+                                presentPlayer = player1
 
-                            elif presentPlayer.name == player3.name:
-                                presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
-                                presentPlayer = player4
+                            # elif presentPlayer.name == player3.name:
+                                # presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
+                                # printText(presentPlayer)
+                                # presentPlayer = player4
 
-                            elif presentPlayer.name == player4.name:
-                                presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
-                                presentPlayer = player1                           
+                            # elif presentPlayer.name == player4.name:
+                                # presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
+                                # printText(presentPlayer)
+                                # presentPlayer = player1                           
                     else:
                         showButton2 = False
                     
