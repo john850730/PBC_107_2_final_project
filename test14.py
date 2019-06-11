@@ -344,7 +344,6 @@ class Player():
                     self.isShowText = True
                     return True
 
-
 class Land():                           
     def __init__(self, name, price, payment, location, HP, creditLv):
         self.name = name                     # 土地名稱
@@ -628,7 +627,8 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if button_rect.collidepoint(event.pos): # 按下按钮                    
                         selectCharacter = True
-                        gameStarted = True
+                        gameStarted = True#讓他不會再回到這裡
+                        screen.blit(character_selection, (0,0))
             screen.blit(GameStart, (0,0))       
             blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
             blit_alpha(screen, title, (370, 400), button_alpha)
@@ -640,92 +640,105 @@ def main():
                             '經濟': [(1037, 150), button_alpha], '醫學': [(42, 420), button_alpha],\
                             '哲學': [(292, 420), button_alpha], '中文': [(542, 420), button_alpha],\
                             '生科': [(792, 420), button_alpha], '法律': [(1037, 420), button_alpha]}
-            
-            def selection_blit(diction): # 角色科系印出的函數
-                screen.blit(character_selection, (0,0))
-                for key in diction:
-                    blit_alpha(screen, imagePlayers[key], diction[key][0], diction[key][1])
-                pygame.display.flip()
-                clock.tick(60)
-            
-            selection_blit(selection_dict)
-            
             allset = 0
-            selected = []
+            selected = []#裝選到的人，長度為二
             while allset < 2:
+                screen.blit(character_selection, (0,0))
+                for key in selection_dict:
+                    blit_alpha(screen, imagePlayers[key], selection_dict[key][0], selection_dict[key][1])			
+                pygame.display.flip()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         sys.exit()
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if ce_rect.collidepoint(event.pos):
-                            selection_dict['土木'][1] = 100                       
+                            selection_dict['土木'][1] = 100#選到後就會變淡                       
                             selected.append('土木')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['土木'], selection_dict['土木'][0], selection_dict['土木'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形
+                            #selection_blit(selection_dict)
 
                         if me_rect.collidepoint(event.pos):
                             selection_dict['機械'][1] = 100                           
                             selected.append('機械')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['機械'], selection_dict['機械'][0], selection_dict['機械'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if ib_rect.collidepoint(event.pos):
                             selection_dict['國企'][1] = 100                           
                             selected.append('國企')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['國企'], selection_dict['國企'][0], selection_dict['國企'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if acct_rect.collidepoint(event.pos):
                             selection_dict['會計'][1] = 100                           
                             selected.append('會計')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['會計'], selection_dict['會計'][0], selection_dict['會計'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if econ_rect.collidepoint(event.pos):
                             selection_dict['經濟'][1] = 100                          
                             selected.append('經濟')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['經濟'], selection_dict['經濟'][0], selection_dict['經濟'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if med_rect.collidepoint(event.pos):
                             selection_dict['醫學'][1] = 100                         
                             selected.append('醫學')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['醫學'], selection_dict['醫學'][0], selection_dict['醫學'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形								
+                            #selection_blit(selection_dict)
 
                         if phy_rect.collidepoint(event.pos):
                             selection_dict['哲學'][1] = 100                          
                             selected.append('哲學')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['哲學'], selection_dict['哲學'][0], selection_dict['哲學'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if chi_rect.collidepoint(event.pos):
                             selection_dict['中文'][1] = 100                           
                             selected.append('中文')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['中文'], selection_dict['中文'][0], selection_dict['中文'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if bio_rect.collidepoint(event.pos):
                             selection_dict['生科'][1] = 100                           
                             selected.append('生科')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['生科'], selection_dict['生科'][0], selection_dict['生科'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
                         if law_rect.collidepoint(event.pos):
                             selection_dict['法律'][1] = 100                            
                             selected.append('法律')
                             allset += 1
-                            selection_blit(selection_dict)
+                            blit_alpha(screen, imagePlayers['法律'], selection_dict['法律'][0], selection_dict['法律'][1])#只blit ce_rect並更新他就好
+                            pygame.display.update(ce_rect)#僅更新這個矩形							
+                            #selection_blit(selection_dict)
 
 			# 選好角色	
             name1 = selected[0]
             name2 = selected[1]
-            # name3 = selected[2]
-            # name4 = selected[3]
+
 
             # 創造玩家
-            allplayers = [] # 共四個角色
+            allplayers = [] # 共2個角色
 
             player1 = Player(small_image[name1], imagePlayers[name1], name1, characters_dict[name1]["credit"], characters_dict[name1]["attack"]\
 		    ,characters_dict[name1]["ActiveAbility"], characters_dict[name1]["PassiveAbility"], characters_dict[name1]["definition"])
@@ -734,14 +747,6 @@ def main():
             player2 = Player(small_image[name2], imagePlayers[name2], name2, characters_dict[name2]["credit"], characters_dict[name2]["attack"]\
 		    ,characters_dict[name2]["ActiveAbility"], characters_dict[name2]["PassiveAbility"], characters_dict[name1]["definition"])
             allplayers.append(player2)
-
-            # player3 = Player(small_image[name3], imagePlayers[name3], name3, characters_dict[name3]["credit"], characters_dict[name3]["attack"]\
-		    # ,characters_dict[name3]["ActiveAbility"], characters_dict[name3]["PassiveAbility"], characters_dict[name1]["definition"])
-            # allplayers.append(player3)
-
-            # player4 = Player(small_image[name4], imagePlayers[name4], name4, characters_dict[name4]["credit"], characters_dict[name4]["attack"]\
-		    # ,characters_dict[name4]["ActiveAbility"], characters_dict[name4]["PassiveAbility"], characters_dict[name1]["definition"])
-            # allplayers.append(player4)
 
             presentPlayer = player1 # 由player1開始
 
@@ -756,10 +761,7 @@ def main():
             C_1 = font.render(player1.name +' Credits: %d / %d' % (player1.credit,player1.graduationCredit), True, black, None)
             M_2 = font.render(player2.name +' Money: %d' % player2.money, True, black, None)
             C_2 = font.render(player2.name +' Credits: %d / %d' % (player2.credit,player2.graduationCredit), True, black, None)
-            # M_3 = font.render(player3.name +' Money: %d' % player3.money, True, black, None)
-            # C_3 = font.render(player3.name +' Credits: %d / %d' % (player3.credit,player3.graduationCredit), True, black, None)
-            # M_4 = font.render(player4.name +' Money: %d' % player4.money, True, black, None)
-            # C_4 = font.render(player4.name +' Credits: %d / %d' % (player4.credit,player4.graduationCredit), True, black, None)
+
             
             screen.blit(backgroud, (0,0))
             screen.blit(board, (1025, 223))
@@ -767,10 +769,7 @@ def main():
             screen.blit(C_1, (1033,283))
             screen.blit(M_2, (1033,313))
             screen.blit(C_2, (1033,343))
-            # screen.blit(M_3, (1033,373))
-            # screen.blit(C_3, (1033,403))
-            # screen.blit(M_4, (1033,433))
-            # screen.blit(C_4, (1033,463))
+
             blit_alpha(screen, bigdice_image, (1060, 45), image_alpha) # 放骰子		
             textPosition = [MapMessageBoxPosition[0], MapMessageBoxPosition[1]]
             
@@ -778,13 +777,10 @@ def main():
             # 攻擊力、技能P公佈欄
             P_1 = font.render('%s的攻擊力為%d, 技能為【%s】' % (player1.name, player1.attack, player1.PassiveAbility), True, black, None)
             P_2 = font.render('%s的攻擊力為%d, 技能為【%s】' % (player2.name, player2.attack, player2.PassiveAbility), True, black, None)
-            #P_3 = font.render('%s的攻擊力為%d, 技能為【%s】' % (player3.name, player3.attack, player3.PassiveAbility), True, black, None)
-            #P_4 = font.render('%s的攻擊力為%d, 技能為【%s】' % (player4.name, player4.attack, player4.PassiveAbility), True, black, None)
-            
+
             screen.blit(P_1, (280,225))
             screen.blit(P_2, (280,255))
-            #screen.blit(P_3, (280,285))
-            #screen.blit(P_4, (280,315))
+
 
             # 印出土地名稱及血量的函數
             def landsNameHP(buildings, MapXYvalue):
@@ -818,19 +814,6 @@ def main():
             for player in allplayers:   # 每回合更新movable & creditable
                 player.movable = True
                 player.creditable = True
-            
-            # 印訊息函數，必須放在main裡才能work
-            def printText(player):
-                if player.isShowText == True:
-                    for each in player.showText:
-                        text = font.render(each, True, black, None)
-                        screen.blit(text, textPosition)
-                        textPosition[1] += 20
-            
-            presentPlayer.showText = ['現在是%s的回合，請擲骰子!' % presentPlayer.name, '結束%s的回合請按骰子' % presentPlayer.name]
-            presentPlayer.isShowText = True
-            printText(presentPlayer)
-            presentPlayer.isShowText = False
 
 			# 開始蒐集各種觸發事件
             for event in pygame.event.get():
@@ -855,25 +838,20 @@ def main():
                             if presentPlayer.name == player1.name:
                                 #pygame.time.delay(200) # 故意停一下，假裝骰子在動
                                 showYes_No = player1.move(buildings, allplayers)
-                                #printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player2
 
                             elif presentPlayer.name == player2.name:
-                                #pygame.time.delay(200)
                                 showYes_No = player2.move(buildings, allplayers)
-                                #printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player1
                         else:
                             if presentPlayer.name == player1.name:
                                 presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                #printText(presentPlayer)
                                 presentPlayer = player2
 
                             elif presentPlayer.name == player2.name:
                                 presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                #printText(presentPlayer)
                                 presentPlayer = player1
                     else:
                         print(event.pos, "結果無論點哪裡都會出現座標")
@@ -882,10 +860,7 @@ def main():
                             showYes2 = True
                         if no_rect.collidepoint(event.pos): # 按是否
                             showNo2  = True
-
-
-                printText(presentPlayer)
-                        #pygame.display.flip()#沒用                    
+               
                 # 按回合结束
 			    # 放置是否button
                 if showYes_No == True:
@@ -940,7 +915,10 @@ def main():
                     screen.blit(no2, YesNoMessageBoxPosition[1])							   
 							    					   		                  
 				 
-            
+            for each in presentPlayer.showText:
+                text = font.render(each, True, white, textColorInMessageBox)
+                screen.blit(text,textPosition)
+                textPosition[1] += 30
             
             # 輸贏判斷，遊戲結束
             for each in allplayers:
@@ -957,7 +935,6 @@ def main():
                     font = pygame.font.Font('resource\\font\\tradition.ttf', 200)
                     loseText = font.render(each.name +'有錢才能念書!!', True, red)
                     each.showText = [loseText]
-                    printText(each)
             
             landsNameHP(buildings, MapXYvalue)                            # 更新土地血量
             blit_alpha(screen, bigdice_image, (1060, 45), image_alpha)    # 更新骰子明暗度
