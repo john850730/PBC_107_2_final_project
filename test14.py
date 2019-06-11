@@ -68,7 +68,7 @@ class Player():
                 textline0 = self.name + '購買了' + self.locatedLand.name + '!'
                 textline1 = '此角色被動技能為【%s】' % self.PassiveAbility
                 textline2 = '買完土地、或建蓋城堡後，可以回收百分之十的消耗錢幣!'
-                textline3 = '已回收%d錢幣' % self.locatedLand.price * 0.1
+                textline3 = '已回收%f錢幣' % self.locatedLand.price * 0.1
                 self.showText = [textline0, textline1, textline2, textline3]
                 self.isShowText = True
                 return True
@@ -128,6 +128,7 @@ class Player():
         if self.name == '哲學': # 哲學系技能
             self.dice_value =  random.randint(1,6) * 2
             self.position += self.dice_value
+            self.dice_value = self.dice_value / 2  #還原(才能印出)
             textline0 = '此角色被動技能為【%s】' % self.PassiveAbility
             textline1 = '擲骰子點數翻倍!'
             self.showText = [textline0, textline1]
@@ -390,7 +391,7 @@ def main():
     red = (255,0,0)
     blue = (0,0,255)
     green = (0,255,0)
-    font = pygame.font.Font('resource\\font\\tradition.ttf',30)
+    font = pygame.font.Font('resource\\font\\tradition.ttf',20)
     
     
     # 上傳圖片
@@ -407,31 +408,37 @@ def main():
     chess_list = [chess_0,chess_1,chess_2,chess_3,chess_4]
     bigdice_image = pygame.image.load("resource\\pic\\dice.png").convert_alpha()
     bigdice_image = pygame.transform.scale(bigdice_image, (150,150))
-    dice_1 = pygame.image.load("resource\\pic\\dice_1.png")
-    dice_2 = pygame.image.load("resource\\pic\\dice_2.png")
-    dice_3 = pygame.image.load("resource\\pic\\dice_3.png")
-    dice_4 = pygame.image.load("resource\\pic\\dice_4.png")
-    dice_5 = pygame.image.load("resource\\pic\\dice_5.png")
-    dice_6 = pygame.image.load("resource\\pic\\dice_6.png")
+    dice_1o = pygame.image.load("resource\\pic\\dice_1.png")
+    dice_2o = pygame.image.load("resource\\pic\\dice_2.png")
+    dice_3o = pygame.image.load("resource\\pic\\dice_3.png")
+    dice_4o = pygame.image.load("resource\\pic\\dice_4.png")
+    dice_5o = pygame.image.load("resource\\pic\\dice_5.png")
+    dice_6o = pygame.image.load("resource\\pic\\dice_6.png")
+    dice_1 = pygame.transform.scale(dice_1o, (60,60))
+    dice_2 = pygame.transform.scale(dice_2o, (60,60))
+    dice_3 = pygame.transform.scale(dice_3o, (60,60))
+    dice_4 = pygame.transform.scale(dice_4o, (60,60))
+    dice_5 = pygame.transform.scale(dice_5o, (60,60))
+    dice_6 = pygame.transform.scale(dice_6o, (60,60))
     dices = [dice_1,dice_2,dice_3,dice_4,dice_5,dice_6]
     yes = pygame.image.load("resource\\pic\\yes.png")
-    yes = pygame.transform.scale(yes, (80,48))
+    yes = pygame.transform.scale(yes, (50,30))
     yes2 = pygame.image.load("resource\\pic\\yes2.png")
-    yes2 = pygame.transform.scale(yes2, (80,48))
+    yes2 = pygame.transform.scale(yes2, (50,30))
     no = pygame.image.load("resource\\pic\\no.png")
-    no = pygame.transform.scale(no, (80,48))
+    no = pygame.transform.scale(no, (50,30))
     no2 = pygame.image.load("resource\\pic\\no2.png")
-    no2 = pygame.transform.scale(no2, (80,48))
+    no2 = pygame.transform.scale(no2, (50,30))
     GameStart = pygame.image.load("resource\\pic\\GameStart.png")
     GameStart = pygame.transform.scale(GameStart, (1270,768))
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
     StartGameButton = pygame.transform.scale(StartGameButton, (600,125))
     title = pygame.image.load("resource\\pic\\title.png")
     title = pygame.transform.scale(title, (600,125))
-    turnover = pygame.image.load("resource\\pic\\turnover.png")
+    """turnover = pygame.image.load("resource\\pic\\turnover.png")
     turnover = pygame.transform.scale(turnover, (220,140))
     turnover2 = pygame.image.load("resource\\pic\\turnover2.png")
-    turnover2 = pygame.transform.scale(turnover2, (220,140))
+    turnover2 = pygame.transform.scale(turnover2, (220,140))"""
     
     #玩家圖檔Image TBD
     imagePlayer0 = pygame.image.load("resource\\pic\\civil_engineering.png").convert_alpha()
@@ -474,15 +481,15 @@ def main():
     
     # 各种Surface的rect 
     bigdice_rect = bigdice_image.get_rect()
-    bigdice_rect.left , bigdice_rect.top = 50 , 600
+    bigdice_rect.left , bigdice_rect.top = 1066 ,55#矩形左上的座標
     yes_rect = yes.get_rect()
-    yes_rect.left , yes_rect.top = 400,338 
+    yes_rect.left , yes_rect.top = 398,500 
     no_rect = no.get_rect()
-    no_rect.left , no_rect.top =  400,338
+    no_rect.left , no_rect.top =  455,501
     button_rect = StartGameButton.get_rect()
     button_rect.left , button_rect.top = 500,30
-    turnover_rect = turnover.get_rect()
-    turnover_rect.left , turnover_rect.top = 1035,613
+    #turnover_rect = turnover.get_rect()
+    #turnover_rect.left , turnover_rect.top = 1035,613
     ce_rect = imagePlayers['土木'].get_rect()
     ce_rect.left , ce_rect.top = 292,150
     me_rect = imagePlayers['機械'].get_rect()
@@ -535,22 +542,22 @@ def main():
 	
 	
     
-    buildings = [ gate_Land, chengzhon_Land, watermkt_Land, oppChance4, admin_Land, \
+    buildings = [chengzhon_Land, watermkt_Land, oppChance4, admin_Land, \
                 mgmt1_Land, mgmt2_Land, biosci_Land, geo_Land, fDorm_Land,\
                 oppChance3, mDorm_Land, sea_Land, library_Land, hwoDa_Land,\
                 oppChance2, law_Land, social_Land, engn_Land, fore_Land,\
-                civ_Land, lita_Land, oppChance1, philo_Land]
+                civ_Land, lita_Land, oppChance1, philo_Land, gate_Land]
     
     majorlist = ['土木', '機械', '國企', '會計', '經濟', '醫學', '哲學', '中文', '生科' ,'法律']
 	
     
     
     # 座標數據等一下要改
-    MapXYvalue = [(127,296), (127,392), (127,485), (127,584), (225,584), (323,584),\
+    MapXYvalue = [(127,392), (127,485), (127,584), (225,584), (323,584),\
                   (421,584), (519,584), (617,584), (715,584), (813,584),\
                   (813,485), (813,392), (813,296), (813,200), (813,104),\
                   (715,104), (617,104), (519,104), (421,104), (323,104),\
-                  (225,104), (127,104), (127,200), ]
+                  (225,104), (127,104), (127,200), (127,296)]
     
     MapChessPosition_Player1 = []
     MapChessPosition_Player2 = []
@@ -562,18 +569,18 @@ def main():
     
     
     MapMessageBoxPosition = (280, 400)
-    YesNoMessageBoxPosition = [(600, 495) , (700, 495)]
+    YesNoMessageBoxPosition = [(400, 500) , (450, 500)]
     StartGameButtonPosition = (370, 65)
-    TurnOverButtonPosition = (1040, 550)
+    #TurnOverButtonPosition = (1040, 550)
     
     
     # 調整位置
     for i in range(0,24):
         #MapChessPosition_Original.append((MapXYvalue[i][0] - 50, MapXYvalue[i][1] - 80))
-        MapChessPosition_Player1.append((MapXYvalue[i][0] - 10  , MapXYvalue[i][1] ))
-        MapChessPosition_Player2.append((MapXYvalue[i][0] + 40, MapXYvalue[i][1]))
-        #MapChessPosition_Player3.append((MapXYvalue[i][0] , MapXYvalue[i][1] - 100))
-        #MapChessPosition_Player4.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1] - 100))
+        MapChessPosition_Player1.append((MapXYvalue[i][0]  , MapXYvalue[i][1] - 40))
+        MapChessPosition_Player2.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1]-40))
+        MapChessPosition_Player3.append((MapXYvalue[i][0] , MapXYvalue[i][1] - 100))
+        MapChessPosition_Player4.append((MapXYvalue[i][0] + 50, MapXYvalue[i][1] - 100))
         #MapChessPosition_Com.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 100))
         #MapChessPosition_Payment.append((MapXYvalue[i][0] - 30, MapXYvalue[i][1] - 15))
     
@@ -803,10 +810,10 @@ def main():
                     screen.blit(each.small_image,MapChessPosition_Player1[each.position])
                 elif each == allplayers[1]:
                     screen.blit(each.small_image,MapChessPosition_Player2[each.position])
-                #elif each == allplayers[2]:
-                    #screen.blit(each.small_image,MapChessPosition_Player3[each.position])
-                #elif each == allplayers[3]:
-                    #screen.blit(each.small_image,MapChessPosition_Player4[each.position])
+                # #elif each == allplayers[2]:
+                    # screen.blit(each.small_image,MapChessPosition_Player3[each.position])
+                # #elif each == allplayers[3]:
+                    # screen.blit(each.small_image,MapChessPosition_Player4[each.position])
             
             for player in allplayers:   # 每回合更新movable & creditable
                 player.movable = True
@@ -818,184 +825,111 @@ def main():
                     for each in player.showText:
                         text = font.render(each, True, black, None)
                         screen.blit(text, textPosition)
-                        textPosition[1] += 30
+                        textPosition[1] += 20
             
-            presentPlayer.showText = ['現在是%s的回合，請擲骰子!' % presentPlayer.name, '結束%s的回合請按右下角【Next Turn!】' % presentPlayer.name]
+            presentPlayer.showText = ['現在是%s的回合，請擲骰子!' % presentPlayer.name, '結束%s的回合請按骰子' % presentPlayer.name]
             presentPlayer.isShowText = True
             printText(presentPlayer)
             presentPlayer.isShowText = False
 
 			# 開始蒐集各種觸發事件
             for event in pygame.event.get():
+                #print(event.type)
                 if event.type == pygame.QUIT: # 按螢幕右上角叉叉
                     sys.exit()
 
-                if event.type == pygame.MOUSEMOTION:
-                    if bigdice_rect.collidepoint(event.pos):
+                if event.type == pygame.MOUSEMOTION: 
+                    if bigdice_rect.collidepoint(event.pos):#bug:永遠都在else所以顏色一直都是190的樣子!==>為何不會判斷
+                        #print("dice motion 2 works")
                         image_alpha = 255   
-                    else:
+                    else:#一直在這裡，即使點到骰子
                         image_alpha = 190
-
-			    # 四個玩家要輪流玩，第一位是player1已初始化，但是接下來要判斷!
-                if event.type == pygame.MOUSEBUTTONDOWN:
-
-                    if bigdice_rect.collidepoint(event.pos):
+                        #print(event.posthis works)
+                pygame.display.update(bigdice_rect)
+			    # 2個玩家要輪流玩，第一位是player1已初始化，但是接下來要判斷!
+                if event.type == pygame.MOUSEBUTTONDOWN:#ok
+                    #print("buttondown是成功的")
+                    if bigdice_rect.collidepoint(event.pos):#點骰子，一直失敗
+                        print("點骰子")
                         if presentPlayer.movable == True:
                             if presentPlayer.name == player1.name:
-                                pygame.time.delay(200) # 故意停一下，假裝骰子在動
+                                #pygame.time.delay(200) # 故意停一下，假裝骰子在動
                                 showYes_No = player1.move(buildings, allplayers)
-                                printText(presentPlayer)
+                                #printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player2
 
                             elif presentPlayer.name == player2.name:
-                                pygame.time.delay(200)
+                                #pygame.time.delay(200)
                                 showYes_No = player2.move(buildings, allplayers)
-                                printText(presentPlayer)
-                                whetherYes_NoJudge = showYes_No
-                                presentPlayer = player3
-
-                            elif presentPlayer.name == player3.name:
-                                pygame.time.delay(200)
-                                showYes_No = player3.move(buildings, allplayers)
-                                printText(presentPlayer)
-                                whetherYes_NoJudge = showYes_No
-                                presentPlayer = player4
-
-                            elif presentPlayer.name == player4.name:
-                                pygame.time.delay(200)
-                                showYes_No = player4.move(buildings, allplayers)
-                                printText(presentPlayer)
+                                #printText(presentPlayer)
                                 whetherYes_NoJudge = showYes_No
                                 presentPlayer = player1
                         else:
                             if presentPlayer.name == player1.name:
                                 presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
+                                #printText(presentPlayer)
                                 presentPlayer = player2
 
                             elif presentPlayer.name == player2.name:
                                 presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
-                                presentPlayer = player3
-
-                            elif presentPlayer.name == player3.name:
-                                presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
-                                presentPlayer = player4
-
-                            elif presentPlayer.name == player4.name:
-                                presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
+                                #printText(presentPlayer)
                                 presentPlayer = player1
-                    
-                    # 按回合结束
-                    if turnover_rect.collidepoint(event.pos):
-                        showButton2 = True
-                        if presentPlayer.movable == True:
-                            if presentPlayer.name == player1.name:
-                                pygame.time.delay(200) # 故意停一下，假裝骰子在動
-                                showYes_No = player1.move(buildings, allplayers)
-                                printText(presentPlayer)
-                                whetherYes_NoJudge = showYes_No
-                                presentPlayer = player2
-
-                            elif presentPlayer.name == player2.name:
-                                pygame.time.delay(200)
-                                showYes_No = player2.move(buildings, allplayers)
-                                printText(presentPlayer)
-                                whetherYes_NoJudge = showYes_No
-                                presentPlayer = player1
-
-                            # elif presentPlayer.name == player3.name:
-                                # pygame.time.delay(200)
-                                # showYes_No = player3.move(buildings, allplayers)
-                                # printText(presentPlayer)
-                                # whetherYes_NoJudge = showYes_No
-                                # presentPlayer = player4
-
-                            # elif presentPlayer.name == player4.name:
-                                # pygame.time.delay(200)
-                                # showYes_No = player4.move(buildings, allplayers)
-                                # printText(presentPlayer)
-                                # whetherYes_NoJudge = showYes_No
-                                # presentPlayer = player1
-                        else:
-                            if presentPlayer.name == player1.name:
-                                presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
-                                presentPlayer = player2
-
-                            elif presentPlayer.name == player2.name:
-                                presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                printText(presentPlayer)
-                                presentPlayer = player1
-
-                            # elif presentPlayer.name == player3.name:
-                                # presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                # printText(presentPlayer)
-                                # presentPlayer = player4
-
-                            # elif presentPlayer.name == player4.name:
-                                # presentPlayer.showText = ['%s本回合不能移動' % presentPlayer.name]
-                                # printText(presentPlayer)
-                                # presentPlayer = player1                           
                     else:
-                        showButton2 = False
-                    
+                        print(event.pos, "結果無論點哪裡都會出現座標")
                     if whetherYes_NoJudge == True: 
                         if yes_rect.collidepoint(event.pos): # 按是否
                             showYes2 = True
                         if no_rect.collidepoint(event.pos): # 按是否
                             showNo2  = True
 
-            
-					
-                    if whetherYes_NoJudge == True: 
-                        if yes_rect.collidepoint(event.pos): # 按是
-                            showYes2 = True
-                            
-                        if no_rect.collidepoint(event.pos): # 按否
-                            showNo2  = True
 
-			        # 放置是否button
-                    if showYes_No == True:
-                        screen.blit(yes, YesNoMessageBoxPosition[0])
-                        screen.blit(no, YesNoMessageBoxPosition[1])
+                printText(presentPlayer)
+                        #pygame.display.flip()#沒用                    
+                # 按回合结束
+			    # 放置是否button
+                if showYes_No == True:
+                    screen.blit(yes, YesNoMessageBoxPosition[0])
+                    screen.blit(no, YesNoMessageBoxPosition[1])
        
 
                 if event.type == pygame.MOUSEBUTTONUP:
 
-                    if turnover_rect.collidepoint(event.pos): # 按回合结束
+                    if bigdice_rect.collidepoint(event.pos): # 按回合结束
                         showButton2 = False
                     
                     if yes_rect.collidepoint(event.pos): # 按是
                         showYes2 = False
                         showYes_No = False
                         # 只有在可以判定的时候才能算按下了是 同時將判斷條件設置為空
-                        if whetherYes_NoJudge == True:
-                            pressYes = True
-                            whetherYes_NoJudge = False
+                    if whetherYes_NoJudge == True:
+                        pressYes = True
+                        whetherYes_NoJudge = False
                                    
                     if no_rect.collidepoint(event.pos): # 按否
                         showNo2 = False
                         pressYes = False
                         showYes_No = False              
                         whetherYes_NoJudge = False			
+			    #測試用: 按w的話，presentPlayer可以無限移動 (且輪不到其他人)
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w:#按w，玩家一值動
+                        showYes_No = presentPlayer.move(buildings,allplayers)
+                        whetherYes_NoJudge = showYes_No	                
 
+                    
             if presentPlayer.isBuyingLand(pressYes) == True:
                 pressYes = False
                 
             if presentPlayer.isBuildingCastle(pressYes) == True:
                 pressYes = False			
-								   
-			# 放置回合结束button
-            if showButton2:
-                screen.blit(turnover2, TurnOverButtonPosition)
-            else:
-                screen.blit(turnover, TurnOverButtonPosition)		
+			
+            # 放置扔出来的骰子
+            if presentPlayer.dice_value != 0 and showdice:
+                screen.blit(dices[presentPlayer.dice_value - 1],(1040, 550))
+	
 
-            # 放置是否按钮
+            # 放置是否按鈕
             if showYes_No == True:
                 screen.blit(yes, YesNoMessageBoxPosition[0])
                 screen.blit(no, YesNoMessageBoxPosition[1])
@@ -1006,24 +940,21 @@ def main():
                     screen.blit(no2, YesNoMessageBoxPosition[1])							   
 							    					   		                  
 				 
-			#測試用: 按w的話，presentPlayer可以無限移動 (且輪不到其他人)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:#按w，玩家一值動
-                    showYes_No = presentPlayer.move(buildings,allplayers)
-                    whetherYes_NoJudge = showYes_No	                
             
             
             # 輸贏判斷，遊戲結束
             for each in allplayers:
-                #font = pygame.font.Font('resource\\font\\myfont.ttf', 200)
+                
                 if each.credit >= each.graduationCredit:
+                    font = pygame.font.Font('resource\\font\\tradition.ttf', 200)
                     winText = font.render(each.name +'成功畢業了!!', True, red)
                     screen.fill(black)
                     screen.blit(winText, (100,100))
-                    #font = pygame.font.Font('resource\\font\\myfont.ttf',30)
+                    font = pygame.font.Font('resource\\font\\tradition.ttf',30)
                     pygame.time.delay(3000)
             
                 if each.money < 0:
+                    font = pygame.font.Font('resource\\font\\tradition.ttf', 200)
                     loseText = font.render(each.name +'有錢才能念書!!', True, red)
                     each.showText = [loseText]
                     printText(each)
