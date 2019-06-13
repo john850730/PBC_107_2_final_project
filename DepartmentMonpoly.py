@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-########################################准备工作###############################################
+########################################準備工作###############################################
 
-# 初始化各种模块
+# 初始化
 import pygame
 import random
 import sys
@@ -19,7 +19,7 @@ characters_dict = \
     '生科': {'credit': 128, 'attack': 2, 'ActiveAbility': '無', 'PassiveAbility': '一日生科，終生顆顆', 'definition': '對方玩家攻擊該玩家的土地或城堡，每次只會受到2點傷害'}, \
     '法律': {'credit': 130, 'attack': 3, 'ActiveAbility': '無', 'PassiveAbility': '這我一定吉', 'definition': '法律系所持有城堡被打下時，扣除打下者10%的錢幣'}}
 
-# 定义类
+# 定義物件等
 class Player():
     def __init__(self, image ,name , isPlayer, PassiveAbility):
         self.name = name
@@ -36,39 +36,37 @@ class Player():
         self.ownedBuildings = []
         self.isShowText = False
         self.soundPlayList = 0
-        self.caishen = 0
+        self.moneyLucky = 0
         self.shuaishen = 0
-        self.tudishen = 0
-        self.pohuaishen = 0
+        self.landLucky = 0
+        self.waterUncle = 0
         self.PassiveAbility = PassiveAbility
         
     
-    def judgePosition(self,buildings): # 位置判断 返回值是所在位置的建筑
+    def judgePosition(self,buildings): 
+        """判斷位置，回傳所在位置的建築"""
         for each in buildings:
             for every in each.location:
                 if self.position == every:
                     return each
                     
-            
-            # 当使用元组时 当元组中只有一个元素时 发现该元素不可迭代 
-            # 出现错误 换成列表后解决
-
-            
-    def buyaBuilding(self,isPressYes):    # 购买方法
+         
+    def buyaBuilding(self,isPressYes):
+        """出現是否購買時，按下Yes按鈕""" 
         if isPressYes and self.locatedBuilding.owner != self.name:
             self.locatedBuilding.owner = self.name
             self.locatedBuilding.wasBought = True
             self.ownedBuildings.append(self.locatedBuilding)
             self.money -= self.locatedBuilding.price
             self.showText = [self.name + '購買了' + self.locatedBuilding.name + '!']
-            self.soundPlayList = 1
             return True
         else:
             return False
         
           
             
-    def addaHouse(self,isPressYes): # 在建筑物上添加一个房子
+    def addaHouse(self,isPressYes): 
+        """出現是否升級時，按下Yes"""
         try:
             if isPressYes and self.locatedBuilding.owner == self.name:
                 self.locatedBuilding.builtRoom += 1
@@ -84,7 +82,8 @@ class Player():
         except:
             pass
     
-    def move(self,buildings,allplayers):   # 移动方法 返回值是所在的建筑位置
+    def move(self,buildings,allplayers):
+        """按下骰子後，腳色移動，移動後，根據所在地進入eventInPosition函數"""	
         self.dice_value =  random.randint(1,6)
         self.position += self.dice_value
         if self.position >= 24:
@@ -94,13 +93,15 @@ class Player():
         return self.eventInPosition(allplayers)
     
     
-    def eventInPosition(self,allplayers):        # 判断在建筑位置应该发生的事件        
+    def eventInPosition(self,allplayers):
+        """判斷所在位置要做甚麼事情"""	
         building = self.locatedBuilding
         if building.name != '機會命運':
-            if self.locatedBuilding.wasBought == False: # 未购买的时候显示建筑的数据！
+            if self.locatedBuilding.wasBought == False: 
+            #無主地，列印價格資訊
                 if self.isPlayer == True:
-                    textLine0 = self.name +'骰出了' + '%d'% self.dice_value + '點！'
-                    textLine1 = self.name +'來到了' + building.name + '!'
+                    textLine0 = self.name +'骰出' + '%d' % self.dice_value + '點！'
+                    textLine1 = self.name +'來到' + building.name + '!'
                     textLine2 = '購買价格：%d' % building.price
                     textLine3 = '過路收費：%d' % building.payment
                     textLine4 = '是否購買?'
@@ -109,52 +110,53 @@ class Player():
                 else :
                     self.addaHouse(not self.buyaBuilding(True))
                     
-                # ----- 动画 -------
-                # ----- 是否购买 ------
-            elif building.owner == self.name: # 路过自己的房子开始加盖建筑！
-                if self.pohuaishen == 1:
+            elif building.owner == self.name: 
+                #是自己的土地，可以選擇是否加蓋
+                if self.waterUncle == 1:
                     textLine0 = self.name + '破壞神附體！'
                     textLine1 = '摧毀了自己的房子！'
                     building.owner = 'no'
                     building.wasBought = False
                     self.showText = [textLine0,textLine1]
-                    self.pohuaishen = 0
+                    self.waterUncle = 0
                 else:
                     if self.isPlayer == True:
                         textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
                         textLine1 = '來到了'+ self.locatedBuilding.name +'!'
-                        textLine2 = '可以加蓋小房子！' 
-                        textLine3 = '加蓋收費：%d' % building.payment
-                        textLine4 = '是否加蓋?'
+                        textLine2 = '可以加蓋系館！' 
+                        textLine3 = '加蓋需要費用：%d' % building.payment
+                        textLine4 = '是否加蓋呢?'
                         self.showText = [textLine0,textLine1,textLine2,textLine3,textLine4]
                         return True
-                    # ----- 动画-------
                     else:
                         self.addaHouse(True)
             else:
-                for each in allplayers: # 被收费！
+                """所在地為其他人的土地"""
+                for each in allplayers: 
+                #到別人的土地或建築，就要被收過路費
+                #加入運氣成分，三種事件
                     if self.locatedBuilding.owner == each.name and each.name != self.name:
-                        if self.caishen == 1:
-                            textLine0 = self.name + '財神附體！'
+                        if self.moneyLucky == 1:
+                            textLine0 = self.name + '人脈大增，大家都是你的好朋友!!'
                             textLine1 = '免除過路費%d！' % (building.payment * (building.builtRoom + 1))
                             self.showText = [textLine0,textLine1]
-                            self.caishen = 0
+                            self.moneyLucky = 0
                         else:
-                            if self.tudishen == 1:
+                            if self.landLucky == 1:
                                 textLine0 = self.name + '使用【新體NPC】真傳！'
                                 textLine1 = '強佔土地！'
                                 textLine2 = building.name + '現在屬於'+ self.name
                                 self.locatedBuilding.owner = self.name
                                 self.showText = [textLine0,textLine1,textLine2]
-                                self.tudishen = 0
+                                self.landLucky = 0
                             else:
-                                if self.pohuaishen == 1:
+                                if self.waterUncle == 1:
                                     textLine0 = self.name + '使用【水源阿伯】真傳！'
-                                    textLine1 = '摧毀了對手的房子！'
+                                    textLine1 = '對手的建築房子被拖走了！'
                                     building.owner = 'no'
                                     building.wasBought = False
                                     self.showText = [textLine0,textLine1]
-                                    self.pohuaishen = 0   
+                                    self.waterUncle = 0   
                                 else:
                                     textLine0 = self.name + '骰出了' + '%d'% self.dice_value + '點！'
                                     textLine1 = self.name+ '來到了'+ each.name+'的'  
@@ -166,18 +168,17 @@ class Player():
                                         textLine3 = '過路收費：%d' % (building.payment * (building.builtRoom + 1))
                                     textLine4 = '幫QQ！'+ self.name +'好口憐！'
                                     self.showText = [textLine0,textLine1+textLine2,textLine3,textLine4]
-                                    # 收费！
+                                    # 收費！
                                     self.money -= building.payment * (building.builtRoom + 1)
                                     each.money += building.payment * (building.builtRoom + 1)
                                     self.soundPlayList = 3
-                                    # ----- 动画-------
+
                         
         else:
-            # 发现不能处理在空地上的情况 于是使用 try & except 来解决！然后加入了幸运事件功能！
-            # 后来发现 try except 弊端太大 找不到错误的根源 换为if else嵌套。。
-            whichone = self.dice_value % 4
+            """所在地為機會命運，抽到的人會進入那個狀態，當走到別人土地時會生效(並reset)"""
+            whichone = self.dice_value % 4#也是random
             if whichone == 0:
-                self.caishen = 1
+                self.moneyLucky = 1
                 textLine2 = '遇到了財神！'
                 textLine3 = '免一次過路費！'
             if whichone == 1:
@@ -185,35 +186,37 @@ class Player():
                 textLine2 = '遇到了衰神！'
                 textLine3 = '過路費加倍一次！'
             if whichone == 2:
-                self.tudishen = 1
+                self.landLucky = 1
                 textLine2 = '得到【新體NPC】真傳！'
                 textLine3 = '強佔一次房子！'
             if whichone == 3:
-                self.pohuaishen = 1
+                self.waterUncle = 1
                 textLine3 = '摧毀路過的房子！'
                 textLine2 = '得到【水源阿伯】真傳！'
             textLine0 = self.name +'骰出了' +'%d'% self.dice_value + '點！'
             textLine1 = '來到了機會命運！'
             self.showText = [textLine0,textLine1,textLine2,textLine3]
 
+
     
     
     
-class Building():                           # 好像所有功能都在Player类里实现了=_=
+class Building():                           
     def __init__(self,name,price,payment,location):
         self.name = name
         self.price = price
         self.payment = payment
         self.location = location
-        self.wasBought = False               # 是否被购买
-        self.builtRoom = 0                   # 小房子建造的数目
+        self.wasBought = False               
+        self.builtRoom = 0                   
         self.owner = 'no'
     
     
 
 
-# 带透明度的绘图方法 by turtle 2333
+
 def blit_alpha(target,source,location,opacity):
+    #用來繪製按鍵深淺
     x = location[0]
     y = location[1]
     temp = pygame.Surface((source.get_width(),source.get_height())).convert()
@@ -225,7 +228,7 @@ def blit_alpha(target,source,location,opacity):
 
 
 
-########################################主函数###############################################    
+########################################主函數###############################################    
 
 
 def main():
@@ -237,7 +240,7 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("臺大戰系比武大會")
     
-    # 读取字体以及有关数据
+    # 上傳字體與顏色
     textColorInMessageBox = (141,146,152)
     white = (255,255,255)
     black = (0,0,0)
@@ -247,9 +250,9 @@ def main():
     font = pygame.font.Font('resource\\font\\tradition.ttf',30)
     
     
-    # 读取资源
-    backgroud = pygame.image.load("resource\\pic\\GameMap.png")
-    backgroud = pygame.transform.scale(backgroud, (1270,768))
+    # 上傳各種圖檔
+    background = pygame.image.load("resource\\pic\\GameMap.png")
+    background = pygame.transform.scale(background, (1270,768))
     character_selection = pygame.image.load("resource\\pic\\Charater_selection.png")
     character_selection = pygame.transform.scale(character_selection, (1270,768))
     chess_0 = pygame.image.load("resource\\pic\\chess_0.png")
@@ -285,25 +288,17 @@ def main():
     GameStart = pygame.transform.scale(GameStart, (1270,768))
     StartGameButton = pygame.image.load("resource\\pic\\StartGameButton.png").convert_alpha()
     StartGameButton = pygame.transform.scale(StartGameButton, (600,125))
-    title = pygame.image.load("resource\\pic\\title.png")
-    title = pygame.transform.scale(title, (600,125))
     turnover = pygame.image.load("resource\\pic\\turnover.png")
     turnover = pygame.transform.scale(turnover, (220,140))
     turnover2 = pygame.image.load("resource\\pic\\turnover2.png")
     turnover2 = pygame.transform.scale(turnover2, (220,140))
     shuaishen = pygame.image.load("resource\\pic\\shuaishen.png").convert_alpha()
-    tudishen = pygame.image.load("resource\\pic\\tudishen.png").convert_alpha()
-    caishen = pygame.image.load("resource\\pic\\caishen.png").convert_alpha()
-    pohuaishen = pygame.image.load("resource\\pic\\pohuaishen.png").convert_alpha()
+    landLucky = pygame.image.load("resource\\pic\\landLucky.png").convert_alpha()
+    moneyLucky = pygame.image.load("resource\\pic\\moneyLucky.png").convert_alpha()
+    waterUncle = pygame.image.load("resource\\pic\\waterUncle.png").convert_alpha()
+
     
-    rollDiceSound = pygame.mixer.Sound("resource\\sound\\rolldicesound.wav")
-    bgm = pygame.mixer.music.load("resource\\sound\\bgm.ogg")
-    throwcoin = pygame.mixer.Sound("resource\\sound\\throwcoin.wav")
-    moneysound = pygame.mixer.Sound("resource\\sound\\moneysound.wav")
-    aiyo = pygame.mixer.Sound("resource\\sound\\aiyo.wav")
-    didong = pygame.mixer.Sound("resource\\sound\\didong.wav")
-    
-    #玩家圖檔Image TBD
+    #玩家圖檔Image 
     imagePlayer0 = pygame.image.load("resource\\pic\\civil_engineering.png").convert_alpha()
     imagePlayer0 = pygame.transform.scale(imagePlayer0, (250,250))
     imagePlayer1 = pygame.image.load("resource\\pic\\machanical_engineering.png").convert_alpha()
@@ -325,26 +320,24 @@ def main():
     imagePlayer9 = pygame.image.load("resource\\pic\\law.png").convert_alpha()
     imagePlayer9 = pygame.transform.scale(imagePlayer9, (250,250))
     #遊戲開始後的小人像
-    imagePlayer0_small = pygame.transform.scale(imagePlayer0, (50, 30))
-    imagePlayer1_small = pygame.transform.scale(imagePlayer1, (50, 30))
-    imagePlayer2_small = pygame.transform.scale(imagePlayer2, (50, 30))
-    imagePlayer3_small = pygame.transform.scale(imagePlayer3, (50, 30))
-    imagePlayer4_small = pygame.transform.scale(imagePlayer4, (50, 30))
-    imagePlayer5_small = pygame.transform.scale(imagePlayer5, (50, 30))
-    imagePlayer6_small = pygame.transform.scale(imagePlayer6, (50, 30))
-    imagePlayer7_small = pygame.transform.scale(imagePlayer7, (50, 30))
-    imagePlayer8_small = pygame.transform.scale(imagePlayer8, (50, 30))
-    imagePlayer9_small = pygame.transform.scale(imagePlayer9, (50, 30))
+    imagePlayer0_small = pygame.transform.scale(imagePlayer0, (80, 60))
+    imagePlayer1_small = pygame.transform.scale(imagePlayer1, (80, 60))
+    imagePlayer2_small = pygame.transform.scale(imagePlayer2, (80, 60))
+    imagePlayer3_small = pygame.transform.scale(imagePlayer3, (80, 60))
+    imagePlayer4_small = pygame.transform.scale(imagePlayer4, (80, 60))
+    imagePlayer5_small = pygame.transform.scale(imagePlayer5, (80, 60))
+    imagePlayer6_small = pygame.transform.scale(imagePlayer6, (80, 60))
+    imagePlayer7_small = pygame.transform.scale(imagePlayer7, (80, 60))
+    imagePlayer8_small = pygame.transform.scale(imagePlayer8, (80, 60))
+    imagePlayer9_small = pygame.transform.scale(imagePlayer9, (80, 60))
 	
     small_image = {"土木":imagePlayer0_small, "機械":imagePlayer1_small, "國企":imagePlayer2_small, '會計':imagePlayer3_small, '經濟':imagePlayer4_small\
 		   ,'醫學':imagePlayer5_small, '哲學':imagePlayer6_small, '中文':imagePlayer7_small, '生科':imagePlayer8_small, '法律':imagePlayer9_small}
     imagePlayers = {"土木":imagePlayer0, "機械":imagePlayer1, "國企":imagePlayer2, '會計':imagePlayer3, '經濟':imagePlayer4\
 		   ,'醫學':imagePlayer5, '哲學':imagePlayer6, '中文':imagePlayer7, '生科':imagePlayer8, '法律':imagePlayer9}#dictionary of images of players, keys = "name"
 
-    # PlayList 在对象中设置应该播放的声音
-    playList = [moneysound ,throwcoin ,aiyo]
     
-    # 各种Surface的rect 
+    # 各種rect 
     bigdice_rect = bigdice_image.get_rect()
     bigdice_rect.left , bigdice_rect.top = 1066, 55
     yes_rect = yes.get_rect()
@@ -378,13 +371,13 @@ def main():
     law_rect.left , law_rect.top = 1037,420
     
     
-    # 初始化建筑物数据
-    gate_Land = Building('大門',0,0,[0]) # 沒事
+    # 創造各種建築:name,price,payment,location
+    gate_Land = Building('大門',0,0,[0]) 
     philo_Land = Building('哲學系館',200,200,[23])
     oppChance1 = Building('機會命運',0,0,[22])
     lita_Land = Building('文學院',200,200,[21])
     civ_Land = Building('土木系館',400,300,[20])
-    fore_Land = Building('森林系館',0,0,[19]) # 停一回合
+    fore_Land = Building('森林系館',0,0,[19]) 
     engn_Land = Building('工綜',400,300,[18])
     social_Land = Building('社科院',200,400,[17])
     law_Land = Building('霖澤館',400,300,[16])
@@ -394,7 +387,7 @@ def main():
     sea_Land = Building('工科海',400,300,[12])
     mDorm_Land = Building('男一舍',200,200,[11])
     oppChance3 = Building('機會命運',0,0,[10])
-    fDorm_Land = Building('女九自助餐',0,0,[9]) # 停一回合
+    fDorm_Land = Building('女九自助餐',0,0,[9]) 
     geo_Land = Building("地理系館",600,200,[8])
     biosci_Land = Building("生科館",600,200,[7])
     mgmt2_Land = Building('管二',600,400,[6])
@@ -402,7 +395,7 @@ def main():
     admin_Land = Building('行政大樓',400,300,[4])
     oppChance4 = Building('機會命運',0,0,[3])
     watermkt_Land = Building('水源市場',600,200,[2])
-    chengzhon_Land = Building('送往城中校區',0,0,[1]) # 暫停一回合
+    chengzhon_Land = Building('送往城中校區',500,100,[1]) 
 	
 	
     
@@ -414,7 +407,7 @@ def main():
     
     
     
-    # 坐标数据 同时处理坐标数据 使之合适
+    # 座標，之後方便用
     MapXYvalue = [(127,392), (127,485), (127,584), (225,584), (323,584),\
                   (421,584), (519,584), (617,584), (715,584), (813,584),\
                   (813,485), (813,392), (813,296), (813,200), (813,104),\
@@ -432,7 +425,6 @@ def main():
     TurnOvwrButtonPosition = (1040, 550)
     
     
-                # 调整位置
     for i in range(0,24):
         MapChessPosition_Original.append((MapXYvalue[i][0]-50,MapXYvalue[i][1]-80))
         MapChessPosition_Player.append((MapXYvalue[i][0]-10,MapXYvalue[i][1]-40))
@@ -443,7 +435,7 @@ def main():
     
         
     
-    # 循环时所用的一些变量      
+    # 循環用      
     running = True
     image_alpha = 255
     button_alpha = 255
@@ -458,20 +450,18 @@ def main():
     showButton2 = False
     selectCharacter = False
     
-    # 播放背景音乐
-    pygame.mixer.music.play(100)
+
     
-########################################进入游戏循环！###############################################    
+########################################Game loop###############################################    
 
 
-    # 循环开始！ 
+
     while running:
         if not gameStarted:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-                
-                # 明暗触发 鼠标位置判断 
+                 
                 if event.type == pygame.MOUSEMOTION:
                     if button_rect.collidepoint(event.pos):
                         button_alpha = 255   
@@ -480,17 +470,17 @@ def main():
                         
                 if event.type == pygame.MOUSEBUTTONDOWN:
                      
-                    if button_rect.collidepoint(event.pos): # 按下按钮
-                        didong.play()                     
+                    if button_rect.collidepoint(event.pos):                     
                         gameStarted = True
                         selectCharacter = True  
             
-            screen.blit(GameStart , (0,0))       
+            screen.blit(GameStart , (0,0))#第一個頁面       
             blit_alpha(screen, StartGameButton, StartGameButtonPosition, button_alpha)
             font = pygame.font.Font('resource\\font\\tradition.ttf', 150)
             text = font.render('臺大戰系比武大會', True, white)
             screen.blit(text, (210, 370))
             font = pygame.font.Font('resource\\font\\tradition.ttf', 30)
+
         
         if selectCharacter:
             button_alpha = 255
@@ -501,7 +491,7 @@ def main():
                             '生科': [(792, 420), button_alpha], '法律': [(1037, 420), button_alpha]}
             
             def selection_blit(diction): # 角色科系印出的函數
-                screen.blit(character_selection, (0,0))
+                screen.blit(character_selection, (0,0))#第二個頁面(選角)
                 for key in diction:
                     blit_alpha(screen, imagePlayers[key], diction[key][0], diction[key][1])
                 font = pygame.font.Font('resource\\font\\tradition.ttf', 50)
@@ -586,7 +576,7 @@ def main():
                             allset += 1
                             selection_blit(selection_dict)
 
-
+            #創建腳色
             players = []
             computers = []
             allplayers = []
@@ -608,7 +598,6 @@ def main():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 
-                # 明暗触发 鼠标位置判断
                 if event.type == pygame.MOUSEMOTION:
                     if bigdice_rect.collidepoint(event.pos):
                         image_alpha = 255   
@@ -620,7 +609,6 @@ def main():
                     
                     if bigdice_rect.collidepoint(event.pos): # 按骰子
                         if presentPlayer != player_1:
-                            rollDiceSound.play(1, 2000)
                             pygame.time.delay(1000)
                             showYes_No = player_1.move(buildings,allplayers)
                             whetherYes_NoJudge = showYes_No
@@ -638,7 +626,7 @@ def main():
                     else:
                         showButton2 = False
                     
-                        # 不显示Yes_No的时候不能点击它们！
+                        # 不顯示Yes_No的時不能點擊！
                     if whetherYes_NoJudge == True: 
                         if yes_rect.collidepoint(event.pos): # 按是否
                             showYes2 = True
@@ -654,7 +642,7 @@ def main():
                     if yes_rect.collidepoint(event.pos): # 按是否
                         showYes2 = False
                         showYes_No = False
-                        # 只有在可以判定的时候才能算按下了是 同时将判断条件置为空
+                        
                         if whetherYes_NoJudge == True:
                             pressYes = True
                             whetherYes_NoJudge = False
@@ -666,7 +654,7 @@ def main():
                         showYes_No = False              
                         whetherYes_NoJudge = False        
             
-                # 测试事件选项        
+                # 測試選項用        
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w:
                         showYes_No = player_1.move(buildings,allplayers)
@@ -677,7 +665,7 @@ def main():
                         presentPlayer = player_com1
             
              
-            # 购买房屋！！！！！！！！
+            # 購買的按鍵還原
             
             if presentPlayer.buyaBuilding(pressYes) == True:
                 pressYes = False
@@ -690,8 +678,8 @@ def main():
                 
                     
                 
-            #########################################################################            
-            screen.blit(backgroud , (0,0))
+  ##############################################################################################            
+            screen.blit(background , (0,0))#第三頁(遊戲介面)
             blit_alpha(screen, bigdice_image, (1066, 55), image_alpha)
 
             P_1 = font.render('玩家: %s系, 名言:【%s】' % (player_1.name, player_1.PassiveAbility), True, blue, None)
@@ -711,12 +699,8 @@ def main():
                 textPosition[1] += 30
             font = pygame.font.Font('resource\\font\\tradition.ttf', 30)
 
-            # 播放行动声音
-            if presentPlayer.soundPlayList != 0:
-                playList[presentPlayer.soundPlayList - 1].play()
-                presentPlayer.soundPlayList = 0
                 
-            # 在位置上显示过路费
+            # 在每個位置上顯示過路費
             def landsNameHP(buildings, MapXYvalue):
                 font = pygame.font.Font('resource\\font\\tradition.ttf', 23)
                 for building, coordinate in zip(buildings, MapXYvalue):
@@ -747,61 +731,61 @@ def main():
             landsNameHP(buildings, MapXYvalue)               
             
                     
-            # 打印金钱数和幸运状态
+            # 印出布告欄與運氣狀態
             board = font.render('**錢幣** 排行榜' , True, black, None)
             money_1 = font.render(player_1.name +'(玩家)錢幣：%d' % player_1.money, True, blue)
             screen.blit(board, (1025, 223))
             screen.blit(money_1, (1033,283))
             
-            if player_1.pohuaishen == True:
-                screen.blit(pohuaishen,(1033,313))
+            if player_1.waterUncle == True:
+                screen.blit(waterUncle,(1033,313))
             else:
-                blit_alpha(screen, pohuaishen, (1033,313), half_alpha)
+                blit_alpha(screen, waterUncle, (1033,313), half_alpha)
                 
-            if player_1.caishen == True:
-                screen.blit(caishen, (1088,313))
+            if player_1.moneyLucky == True:
+                screen.blit(moneyLucky, (1088,313))
             else:
-                blit_alpha(screen, caishen, (1088,313), half_alpha)
+                blit_alpha(screen, moneyLucky, (1088,313), half_alpha)
             
             if player_1.shuaishen == True:
                 screen.blit(shuaishen, (1143,313))
             else:
                 blit_alpha(screen, shuaishen, (1143,313), half_alpha)
             
-            if player_1.tudishen == True:
-                screen.blit(tudishen, (1198,313))
+            if player_1.landLucky == True:
+                screen.blit(landLucky, (1198,313))
             else:
-                blit_alpha(screen, tudishen, (1198,313), half_alpha)
+                blit_alpha(screen, landLucky, (1198,313), half_alpha)
             
         
             money_2 = font.render(player_com1.name +'(電腦)錢幣：%d' % player_com1.money, True, red)
             screen.blit(money_2, (1033,373))        
-            if player_com1.pohuaishen == True:
-                screen.blit(pohuaishen, (1033,403))
+            if player_com1.waterUncle == True:
+                screen.blit(waterUncle, (1033,403))
             else:
-                blit_alpha(screen, pohuaishen, (1033,403), half_alpha)
+                blit_alpha(screen, waterUncle, (1033,403), half_alpha)
         
-            if player_com1.caishen == True:
-                screen.blit(caishen, (1088,403))
+            if player_com1.moneyLucky == True:
+                screen.blit(moneyLucky, (1088,403))
             else:
-                blit_alpha(screen, caishen, (1088,403), half_alpha)
+                blit_alpha(screen, moneyLucky, (1088,403), half_alpha)
             
             if player_com1.shuaishen == True:
                 screen.blit(shuaishen, (1143,403))
             else:
                 blit_alpha(screen, shuaishen, (1143,403), half_alpha)
                 
-            if player_com1.tudishen == True:
-                screen.blit(tudishen, (1198,403))
+            if player_com1.landLucky == True:
+                screen.blit(landLucky, (1198,403))
             else:
-                blit_alpha(screen, tudishen, (1198,403), half_alpha)
+                blit_alpha(screen, landLucky, (1198,403), half_alpha)
                 
                 
             # 放置扔出来的骰子
             if player_1.dice_value != 0 and showdice:
                 screen.blit(dices[player_1.dice_value - 1], (1115, 473))        
             
-            # 放置回合结束按钮
+            # 放置回合结束按紐
             if showButton2:
                 screen.blit(turnover2,TurnOvwrButtonPosition)
             else:
@@ -865,7 +849,7 @@ def main():
                     elif (each.position == i) and (each == allplayers[1]):
                         screen.blit(each.small_image, MapChessPosition_Com[each.position])
             
-            # 输赢判断
+            # 輸贏判斷
             for each in allplayers:
                 if each.money <= 0:
                     font = pygame.font.Font('resource\\font\\tradition.ttf', 200)
@@ -877,14 +861,14 @@ def main():
                     font = pygame.font.Font('resource\\font\\tradition.ttf',30)            
                     pygame.time.delay(3000)
                         
-        # 画面运行
+        
         
         pygame.display.flip()
-        clock.tick(60)              # 刷新率
+        clock.tick(60)              
     
             
 
-# 双击打开运行            
+# 點兩下執行            
 if __name__ == "__main__":
     main()            
                                     
